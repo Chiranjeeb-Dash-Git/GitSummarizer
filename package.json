@@ -1,0 +1,13 @@
+{
+  "name": "gitsummarizer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:api": "npm --prefix backend run dev",
+    "dev:web": "npm --prefix frontend run dev",
+    "migrate": "npm --prefix backend run migrate",
+    "test": "npm --prefix backend test && npm --prefix frontend test",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install && node -e \"const fs=require('fs'); fs.cpSync('frontend/dist', 'dist', {recursive:true});\"",
+    "start": "npm --prefix backend start"
+  }
+}
