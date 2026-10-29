@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- HERO BANNER -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0,9,20,30&height=280&section=header&text=GitSummarizer&fontSize=68&fontAlignY=36&fontColor=D4AF37&desc=Next-Gen%20Repository%20Intelligence%20%26%20Automated%20Release%20Notes&descFontSize=20&descAlignY=62&descAlign=50&animation=twinkling&stroke=059669&strokeWidth=2" width="100%" alt="GitSummarizer Header"/>
+<img src="./assets/header.svg" width="100%" alt="GitSummarizer Header"/>
 
 <!-- TYPING SVG ANIMATION -->
 <a href="https://github.com/Chiranjeeb-Dash-Git/GitSummarizer">
@@ -255,6 +255,6 @@ Designed & Architected with obsession by **[Chiranjeeb Dash](https://github.com/
 <br/>
 
 <!-- ANIMATED FOOTER WAVE -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=30,20,9,0&height=180&section=footer&text=Engineered%20for%20Excellence%20•%20Chiranjeeb%20Dash&fontSize=22&fontAlignY=68&fontColor=D4AF37&stroke=059669&strokeWidth=1" width="100%" alt="Footer Banner"/>
+<img src="./assets/footer.svg" width="100%" alt="Footer Banner"/>
 
 </div>

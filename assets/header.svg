@@ -1,0 +1,138 @@
+<svg
+  width="100%"
+  height="280"
+  viewBox="0 0 1200 280"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  style="background-color: #080808; border-radius: 12px; overflow: hidden;"
+>
+  <defs>
+    <!-- Luxury Obsidian to Gold to Emerald Gradient -->
+    <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080808" stop-opacity="0.95" />
+      <stop offset="45%" stop-color="#141E15" stop-opacity="0.8" />
+      <stop offset="75%" stop-color="#059669" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.6" />
+    </linearGradient>
+
+    <linearGradient id="waveGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#047857" stop-opacity="0.5" />
+      <stop offset="50%" stop-color="#059669" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.4" />
+    </linearGradient>
+
+    <!-- Metallic Gold Text Gradient -->
+    <linearGradient id="goldText" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F5E6AB" />
+      <stop offset="35%" stop-color="#D4AF37" />
+      <stop offset="70%" stop-color="#AA820A" />
+      <stop offset="100%" stop-color="#F3E5AB" />
+    </linearGradient>
+
+    <!-- Emerald Glow Filter -->
+    <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    .title-text {
+      font-size: 64px;
+      font-weight: 800;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      letter-spacing: -1.5px;
+      animation: pulseGold 6s ease-in-out infinite alternate;
+    }
+    .tagline-text {
+      font-size: 19px;
+      font-weight: 500;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      fill: #10B981;
+    }
+    .badge-pill {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      font-family: monospace;
+      fill: #D4AF37;
+    }
+    @keyframes pulseGold {
+      0% { filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.25)); }
+      100% { filter: drop-shadow(0 0 24px rgba(5, 150, 105, 0.45)); }
+    }
+  </style>
+
+  <!-- Deep Obsidian Canvas Background -->
+  <rect width="100%" height="100%" fill="#080808" />
+
+  <!-- Animated Fluid Waves -->
+  <g opacity="0.85">
+    <path fill="url(#waveGrad1)">
+      <animate
+        attributeName="d"
+        dur="18s"
+        repeatCount="indefinite"
+        calcMode="spline"
+        keyTimes="0; 0.33; 0.66; 1"
+        keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+        values="
+          M 0 0 L 0 210 C 300 250, 600 170, 1200 220 L 1200 0 Z;
+          M 0 0 L 0 230 C 400 180, 800 260, 1200 200 L 1200 0 Z;
+          M 0 0 L 0 190 C 350 240, 750 180, 1200 240 L 1200 0 Z;
+          M 0 0 L 0 210 C 300 250, 600 170, 1200 220 L 1200 0 Z
+        "
+      />
+    </path>
+    <path fill="url(#waveGrad2)" opacity="0.65">
+      <animate
+        attributeName="d"
+        dur="14s"
+        repeatCount="indefinite"
+        calcMode="spline"
+        keyTimes="0; 0.33; 0.66; 1"
+        keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+        values="
+          M 0 0 L 0 230 C 450 180, 850 250, 1200 210 L 1200 0 Z;
+          M 0 0 L 0 200 C 300 240, 700 170, 1200 240 L 1200 0 Z;
+          M 0 0 L 0 240 C 500 200, 800 250, 1200 190 L 1200 0 Z;
+          M 0 0 L 0 230 C 450 180, 850 250, 1200 210 L 1200 0 Z
+        "
+      />
+    </path>
+  </g>
+
+  <!-- Glowing Accent Border Lines -->
+  <line x1="0" y1="279" x2="1200" y2="279" stroke="#059669" stroke-width="1.5" stroke-opacity="0.6" />
+
+  <!-- Central Brand Pill -->
+  <g transform="translate(600, 52)">
+    <rect x="-115" y="-14" width="230" height="28" rx="14" fill="#0d1f14" stroke="#059669" stroke-width="1" stroke-opacity="0.8" />
+    <circle cx="-95" cy="0" r="4" fill="#10B981" />
+    <text text-anchor="middle" y="4" class="badge-pill">REPOSITORY INTELLIGENCE</text>
+  </g>
+
+  <!-- Main Headline Typography -->
+  <text
+    x="50%"
+    y="140"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    fill="url(#goldText)"
+    class="title-text"
+  >GitSummarizer</text>
+
+  <!-- Subtitle Tagline -->
+  <text
+    x="50%"
+    y="190"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    class="tagline-text"
+  >Next-Gen Codebase Synthesis &amp; Automated Release Dossiers</text>
+</svg>

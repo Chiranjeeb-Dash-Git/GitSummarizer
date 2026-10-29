@@ -1,0 +1,60 @@
+<svg
+  width="100%"
+  height="140"
+  viewBox="0 0 1200 140"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  style="background-color: #080808; border-radius: 12px; overflow: hidden;"
+>
+  <defs>
+    <linearGradient id="footerWave" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" stop-opacity="0.35" />
+      <stop offset="50%" stop-color="#141E15" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.4" />
+    </linearGradient>
+    <linearGradient id="goldCredit" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F5E6AB" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#AA820A" />
+    </linearGradient>
+  </defs>
+
+  <style>
+    .footer-text {
+      font-size: 16px;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      fill: url(#goldCredit);
+    }
+  </style>
+
+  <rect width="100%" height="100%" fill="#080808" />
+
+  <path fill="url(#footerWave)">
+    <animate
+      attributeName="d"
+      dur="16s"
+      repeatCount="indefinite"
+      calcMode="spline"
+      keyTimes="0; 0.5; 1"
+      keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+      values="
+        M 0 140 L 0 50 C 350 10, 750 90, 1200 40 L 1200 140 Z;
+        M 0 140 L 0 35 C 400 80, 800 20, 1200 60 L 1200 140 Z;
+        M 0 140 L 0 50 C 350 10, 750 90, 1200 40 L 1200 140 Z
+      "
+    />
+  </path>
+
+  <line x1="0" y1="0" x2="1200" y2="0" stroke="#059669" stroke-width="1.5" stroke-opacity="0.5" />
+
+  <text
+    x="50%"
+    y="78"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    class="footer-text"
+  >Architected for Prestige &amp; Precision • Chiranjeeb Dash</text>
+</svg>
