@@ -13,7 +13,11 @@ export const register = asyncHandler(async (req, res) => {
       status: 'pending_verification',
       email: result.email,
       expiresAt: result.expiresAt,
-      message: 'Verification code sent to your email.',
+      code: result.code,
+      resendBlocked: result.resendBlocked,
+      message: result.resendBlocked
+        ? 'Resend testing domain only delivers to the owner email. The code has been provided for quick testing.'
+        : 'Verification code sent to your email.',
     },
   });
 });
@@ -39,7 +43,11 @@ export const resendOtp = asyncHandler(async (req, res) => {
       status: 'pending_verification',
       email: result.email,
       expiresAt: result.expiresAt,
-      message: 'A fresh verification code has been sent.',
+      code: result.code,
+      resendBlocked: result.resendBlocked,
+      message: result.resendBlocked
+        ? 'Resend testing domain only delivers to the owner email. The code has been provided for quick testing.'
+        : 'A fresh verification code has been sent.',
     },
   });
 });

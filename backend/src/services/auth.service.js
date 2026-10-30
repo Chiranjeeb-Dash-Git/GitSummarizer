@@ -9,40 +9,42 @@ import * as emailService from './email.service.js';
 
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 
-// Generate 6-digit numeric OTP code
 function generateOtp() {
   return String(crypto.randomInt(100000, 999999));
 }
 
 export async function initiateRegistration({ email, password, displayName }) {
-  // Check if email already registered
-  const existing = await users.findByEmail(email);
+  const normEmail = email.toLowerCase().trim();
+
+  const existing = await users.findByEmail(normEmail);
   if (existing) {
     throw new AppError(409, 'EMAIL_TAKEN', 'An account with this email already exists.');
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
   const code = generateOtp();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-  // Delete prior pending verifications for this email
-  await query('DELETE FROM email_verifications WHERE email = $1', [email.toLowerCase().trim()]);
+  await query('DELETE FROM email_verifications WHERE email = $1', [normEmail]);
 
-  // Insert verification request
   await query(
     `INSERT INTO email_verifications (email, code, password_hash, display_name, expires_at)
      VALUES ($1, $2, $3, $4, $5)`,
-    [email.toLowerCase().trim(), code, passwordHash, displayName.trim(), expiresAt],
+    [normEmail, code, passwordHash, displayName.trim(), expiresAt],
   );
 
-  // Dispatch email with Resend
-  await emailService.sendVerificationOtp({
-    email: email.toLowerCase().trim(),
+  const dispatchResult = await emailService.sendVerificationOtp({
+    email: normEmail,
     code,
     displayName: displayName.trim(),
   });
 
-  return { email: email.toLowerCase().trim(), expiresAt };
+  return {
+    email: normEmail,
+    expiresAt,
+    code: dispatchResult.resendBlocked ? code : undefined,
+    resendBlocked: dispatchResult.resendBlocked,
+  };
 }
 
 export async function verifyRegistrationOtp({ email, code }) {
@@ -62,7 +64,6 @@ export async function verifyRegistrationOtp({ email, code }) {
 
   const pending = rows[0];
 
-  // Create user account in database
   let user;
   try {
     user = await users.create({
@@ -77,7 +78,6 @@ export async function verifyRegistrationOtp({ email, code }) {
     throw err;
   }
 
-  // Cleanup pending records
   await query('DELETE FROM email_verifications WHERE email = $1', [normEmail]);
 
   return user;
@@ -103,13 +103,18 @@ export async function resendVerificationOtp({ email }) {
     [newCode, expiresAt, pending.id],
   );
 
-  await emailService.sendVerificationOtp({
+  const dispatchResult = await emailService.sendVerificationOtp({
     email: normEmail,
     code: newCode,
     displayName: pending.display_name,
   });
 
-  return { email: normEmail, expiresAt };
+  return {
+    email: normEmail,
+    expiresAt,
+    code: dispatchResult.resendBlocked ? newCode : undefined,
+    resendBlocked: dispatchResult.resendBlocked,
+  };
 }
 
 export async function login({ email, password }) {
