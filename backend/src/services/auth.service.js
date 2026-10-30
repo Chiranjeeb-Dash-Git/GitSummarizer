@@ -1,19 +1,115 @@
+import crypto from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
 import { AppError } from '../utils/AppError.js';
+import { query } from '../db/pool.js';
 import * as users from '../repositories/users.repo.js';
+import * as emailService from './email.service.js';
 
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 
-export async function register({ email, password, displayName }) {
+// Generate 6-digit numeric OTP code
+function generateOtp() {
+  return String(crypto.randomInt(100000, 999999));
+}
+
+export async function initiateRegistration({ email, password, displayName }) {
+  // Check if email already registered
+  const existing = await users.findByEmail(email);
+  if (existing) {
+    throw new AppError(409, 'EMAIL_TAKEN', 'An account with this email already exists.');
+  }
+
   const passwordHash = await bcrypt.hash(password, 12);
+  const code = generateOtp();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+  // Delete prior pending verifications for this email
+  await query('DELETE FROM email_verifications WHERE email = $1', [email.toLowerCase().trim()]);
+
+  // Insert verification request
+  await query(
+    `INSERT INTO email_verifications (email, code, password_hash, display_name, expires_at)
+     VALUES ($1, $2, $3, $4, $5)`,
+    [email.toLowerCase().trim(), code, passwordHash, displayName.trim(), expiresAt],
+  );
+
+  // Dispatch email with Resend
+  await emailService.sendVerificationOtp({
+    email: email.toLowerCase().trim(),
+    code,
+    displayName: displayName.trim(),
+  });
+
+  return { email: email.toLowerCase().trim(), expiresAt };
+}
+
+export async function verifyRegistrationOtp({ email, code }) {
+  const normEmail = email.toLowerCase().trim();
+  const cleanCode = String(code).trim();
+
+  const { rows } = await query(
+    `SELECT * FROM email_verifications
+      WHERE email = $1 AND code = $2 AND expires_at > now()
+      ORDER BY created_at DESC LIMIT 1`,
+    [normEmail, cleanCode],
+  );
+
+  if (!rows.length) {
+    throw new AppError(400, 'INVALID_OTP', 'The verification code is incorrect or has expired.');
+  }
+
+  const pending = rows[0];
+
+  // Create user account in database
+  let user;
   try {
-    return await users.create({ email, passwordHash, displayName });
+    user = await users.create({
+      email: pending.email,
+      passwordHash: pending.password_hash,
+      displayName: pending.display_name,
+    });
   } catch (err) {
-    if (err.code === '23505') throw new AppError(409, 'EMAIL_TAKEN', 'An account with this email already exists.');
+    if (err.code === '23505') {
+      throw new AppError(409, 'EMAIL_TAKEN', 'An account with this email already exists.');
+    }
     throw err;
   }
+
+  // Cleanup pending records
+  await query('DELETE FROM email_verifications WHERE email = $1', [normEmail]);
+
+  return user;
+}
+
+export async function resendVerificationOtp({ email }) {
+  const normEmail = email.toLowerCase().trim();
+  const { rows } = await query(
+    `SELECT * FROM email_verifications WHERE email = $1 ORDER BY created_at DESC LIMIT 1`,
+    [normEmail],
+  );
+
+  if (!rows.length) {
+    throw new AppError(404, 'NOT_FOUND', 'No pending registration found for this email. Please register again.');
+  }
+
+  const pending = rows[0];
+  const newCode = generateOtp();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+  await query(
+    `UPDATE email_verifications SET code = $1, expires_at = $2 WHERE id = $3`,
+    [newCode, expiresAt, pending.id],
+  );
+
+  await emailService.sendVerificationOtp({
+    email: normEmail,
+    code: newCode,
+    displayName: pending.display_name,
+  });
+
+  return { email: normEmail, expiresAt };
 }
 
 export async function login({ email, password }) {
@@ -25,4 +121,3 @@ export async function login({ email, password }) {
 
 export const signToken = (userId) =>
   jwt.sign({ sub: userId }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN });
-

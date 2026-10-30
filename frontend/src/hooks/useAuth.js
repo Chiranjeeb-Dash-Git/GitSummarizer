@@ -18,7 +18,15 @@ export function useAuth() {
 
   const register = useMutation({
     mutationFn: (body) => api.post('/auth/register', body),
+  });
+
+  const verifyEmail = useMutation({
+    mutationFn: (body) => api.post('/auth/verify-email', body),
     onSuccess: (r) => qc.setQueryData(['me'], r.data.user),
+  });
+
+  const resendCode = useMutation({
+    mutationFn: (body) => api.post('/auth/resend-code', body),
   });
 
   const logout = useMutation({
@@ -29,6 +37,13 @@ export function useAuth() {
     },
   });
 
-  return { user: me.data ?? null, loading: me.isPending, login, register, logout };
+  return {
+    user: me.data ?? null,
+    loading: me.isPending,
+    login,
+    register,
+    verifyEmail,
+    resendCode,
+    logout,
+  };
 }
-

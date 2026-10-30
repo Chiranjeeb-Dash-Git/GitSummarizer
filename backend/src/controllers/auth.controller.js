@@ -5,10 +5,43 @@ import { setSession, clearSession } from '../middleware/auth.js';
 import * as authService from '../services/auth.service.js';
 import * as users from '../repositories/users.repo.js';
 
+// Step 1: Initiate registration -> generates OTP and dispatches email
 export const register = asyncHandler(async (req, res) => {
-  const user = await authService.register(req.body);
+  const result = await authService.initiateRegistration(req.body);
+  res.status(200).json({
+    data: {
+      status: 'pending_verification',
+      email: result.email,
+      expiresAt: result.expiresAt,
+      message: 'Verification code sent to your email.',
+    },
+  });
+});
+
+// Step 2: Verify OTP code -> creates user account and creates session cookie
+export const verifyEmail = asyncHandler(async (req, res) => {
+  const { email, code } = req.body;
+  if (!email || !code) {
+    throw new AppError(400, 'BAD_REQUEST', 'Email and verification code are required.');
+  }
+  const user = await authService.verifyRegistrationOtp({ email, code });
   setSession(res, user.id);
   res.status(201).json({ data: { user: toPublicUser(user) } });
+});
+
+// Resend OTP code
+export const resendOtp = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  if (!email) throw new AppError(400, 'BAD_REQUEST', 'Email is required.');
+  const result = await authService.resendVerificationOtp({ email });
+  res.json({
+    data: {
+      status: 'pending_verification',
+      email: result.email,
+      expiresAt: result.expiresAt,
+      message: 'A fresh verification code has been sent.',
+    },
+  });
 });
 
 export const login = asyncHandler(async (req, res) => {
@@ -31,4 +64,3 @@ export const me = asyncHandler(async (req, res) => {
   }
   return res.json({ data: { user: toPublicUser(user) } });
 });
-

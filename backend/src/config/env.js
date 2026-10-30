@@ -13,6 +13,7 @@ const schema = z
     COOKIE_SAMESITE: z.enum(['lax', 'strict', 'none']).default('lax'),
     COOKIE_DOMAIN: z.string().optional(),
     GITHUB_TOKEN: z.string().optional(),
+    RESEND_API_KEY: z.string().optional(),
     AI_PROVIDER: z.enum(['openai', 'anthropic', 'gemini']).default('gemini'),
     OPENAI_API_KEY: z.string().optional(),
     OPENAI_MODEL: z.string().default('gpt-4o-mini'),
