@@ -28,7 +28,7 @@ export default function HistoryList() {
     queryKey: ['history'],
     queryFn: ({ pageParam }) =>
       api.get(`/history?limit=20${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ''}`).then((r) => r.data),
-    getNextPageParam: (last) => last.nextCursor ?? undefined,
+    getNextPageParam: (last) => last?.nextCursor ?? undefined,
     initialPageParam: null,
   });
 
@@ -41,16 +41,17 @@ export default function HistoryList() {
         if (!old) return old;
         return {
           ...old,
-          pages: old.pages.map((p) => ({
-            ...p,
-            items: p.items.filter((item) => item.id !== id),
-          })),
+          pages: (old.pages || []).map((p) => {
+            const list = Array.isArray(p) ? p : (p?.items || p || []);
+            const filtered = list.filter((item) => item.id !== id);
+            return Array.isArray(p) ? filtered : { ...p, items: filtered };
+          }),
         };
       });
       return { previous };
     },
     onError: (_err, _id, context) => {
-      qc.setQueryData(['history'], context.previous);
+      qc.setQueryData(['history'], context?.previous);
       toast.error('Could not remove from history');
     },
     onSuccess: () => {
@@ -107,7 +108,12 @@ export default function HistoryList() {
     );
   }
 
-  const items = data.pages.flatMap((p) => p.items);
+  // Safely extract items whether backend returns array or { items: [] }
+  const items = (data?.pages || []).flatMap((p) => {
+    if (Array.isArray(p)) return p;
+    if (Array.isArray(p?.items)) return p.items;
+    return [];
+  });
 
   if (!items.length) {
     return (
@@ -138,63 +144,73 @@ export default function HistoryList() {
 
   return (
     <div className="mt-8">
-      <div className="flex justify-end pb-4">
-        <Button variant="quiet" onClick={() => setClearOpen(true)}>
+      <div className="mb-6 flex justify-end">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setClearOpen(true)}
+          className="text-muted hover:text-oxide"
+        >
           Clear history
         </Button>
       </div>
 
       <div className="space-y-8">
         {grouped.map(({ day, rows }) => (
-          <div key={day}>
-            <div className="sticky top-[72px] z-10 bg-paper py-2 font-display text-xl font-bold">
+          <section key={day} aria-label={day}>
+            <h2 className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-muted">
               {day}
-            </div>
-            <div className="mt-2 space-y-2">
-              {rows.map((row, idx) => (
+            </h2>
+            <div className="divide-y divide-line rounded-field border border-line bg-surface">
+              {rows.map((row) => (
                 <div
                   key={row.id}
-                  className="group relative flex items-center justify-between overflow-hidden rounded-field border border-line-strong bg-surface p-4 pl-7 shadow-slab-sm"
+                  className="flex flex-col gap-3 p-4 transition-colors hover:bg-surface-2 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <span
-                    className="absolute inset-y-0 left-0 w-2"
-                    style={{ background: `var(--strata-${(idx % 6) + 1})` }}
-                  />
-
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    {row.summary?.repository?.avatarUrl && (
+                  <div className="flex items-center gap-3 min-w-0">
+                    {row.repository?.avatarUrl ? (
                       <img
-                        src={row.summary.repository.avatarUrl}
+                        src={row.repository.avatarUrl}
                         alt=""
-                        className="h-9 w-9 shrink-0 rounded-full border border-line"
+                        className="h-8 w-8 rounded-full border border-line bg-surface"
                       />
+                    ) : (
+                      <div className="h-8 w-8 rounded-full border border-line bg-surface-2" />
                     )}
+
                     <div className="min-w-0">
-                      <WipeLink
-                        to={`/r/${row.summary?.id}`}
-                        className="font-display font-bold text-ink hover:text-malachite"
-                      >
-                        {row.summary?.repository?.fullName || row.queryInput}
-                      </WipeLink>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
-                        <span>{row.summary?.kind || 'overview'}</span>
-                        <span>•</span>
-                        <span>{formatTime(row.createdAt)}</span>
+                      <div className="flex items-center gap-2">
+                        <WipeLink
+                          to={`/r/${row.summaryId}`}
+                          className="truncate font-medium text-ink hover:underline"
+                        >
+                          {row.repository?.fullName || row.title || 'Untitled summary'}
+                        </WipeLink>
                         {row.saved && (
-                          <span className="inline-flex items-center gap-1 font-semibold text-malachite">
-                            <Bookmark size={12} className="fill-current" /> Saved
+                          <span title="Saved to library">
+                            <Bookmark size={14} className="fill-ochre text-ochre" />
                           </span>
                         )}
                       </div>
+                      <p className="truncate text-xs text-muted">
+                        {row.repository?.language && <span>{row.repository.language} • </span>}
+                        <span>{formatTime(row.createdAt)}</span>
+                      </p>
                     </div>
                   </div>
 
-                  <div className="ml-4 shrink-0">
+                  <div className="flex items-center gap-2 self-end sm:self-auto">
+                    <WipeLink
+                      to={`/r/${row.summaryId}`}
+                      className="rounded-field px-3 py-1.5 text-xs font-medium text-ink hover:bg-surface"
+                    >
+                      Open
+                    </WipeLink>
                     <button
                       type="button"
                       onClick={() => deleteMutation.mutate(row.id)}
-                      aria-label={`Remove ${row.summary?.repository?.fullName || 'item'} from history`}
-                      className="grid h-8 w-8 place-items-center rounded-field text-muted hover:bg-surface-2 hover:text-oxide"
+                      aria-label="Remove item"
+                      className="rounded-field p-1.5 text-muted hover:text-oxide hover:bg-surface transition-colors"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -202,29 +218,37 @@ export default function HistoryList() {
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         ))}
       </div>
 
-      <div ref={sentinelRef} className="h-8" />
-      {isFetchingNextPage && <Skeleton className="mt-4 h-16 w-full rounded-field" />}
+      <div ref={sentinelRef} className="h-4" />
+
+      {isFetchingNextPage && (
+        <div className="mt-4 flex justify-center py-4">
+          <Skeleton className="h-8 w-32 rounded-field" />
+        </div>
+      )}
 
       <Dialog
         open={clearOpen}
         onClose={() => setClearOpen(false)}
-        title="Clear your reading history?"
+        title="Clear entire history?"
+        description="This will permanently delete all your repository reading history. Saved summaries will remain untouched."
       >
-        <p className="text-muted">Saved summaries stay.</p>
         <div className="mt-6 flex justify-end gap-3">
-          <Button variant="ghost" onClick={() => setClearOpen(false)}>
+          <Button variant="secondary" onClick={() => setClearOpen(false)}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={() => clearMutation.mutate()} disabled={clearMutation.isPending}>
-            Clear history
+          <Button
+            variant="danger"
+            onClick={() => clearMutation.mutate()}
+            disabled={clearMutation.isPending}
+          >
+            {clearMutation.isPending ? 'Clearing...' : 'Clear history'}
           </Button>
         </div>
       </Dialog>
     </div>
   );
 }
-

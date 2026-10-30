@@ -7,7 +7,10 @@ export const useUI = create((set, get) => ({
   // Route-change wipe: 'idle' -> 'cover' (run navigation) -> 'reveal' -> 'idle'
   wipe: { phase: 'idle', action: null },
   startWipe: (action) => {
-    if (get().wipe.phase !== 'idle') return;
+    if (get().wipe.phase !== 'idle') {
+      action?.();
+      return;
+    }
     set({ wipe: { phase: 'cover', action } });
   },
   finishCover: () => {
@@ -16,5 +19,5 @@ export const useUI = create((set, get) => ({
     set({ wipe: { phase: 'reveal', action: null } });
   },
   finishReveal: () => set({ wipe: { phase: 'idle', action: null } }),
+  resetWipe: () => set({ wipe: { phase: 'idle', action: null } }),
 }));
-

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useUI } from '../../store/ui.js';
@@ -38,6 +38,17 @@ export default function StrataWipe() {
   const phase = useUI((s) => s.wipe.phase);
   const finishCover = useUI((s) => s.finishCover);
   const finishReveal = useUI((s) => s.finishReveal);
+  const resetWipe = useUI((s) => s.resetWipe);
+
+  // Safety watchdog: ensure the wipe always clears even if framer-motion completes offscreen
+  useEffect(() => {
+    if (phase === 'idle') return;
+    const timer = setTimeout(() => {
+      resetWipe();
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [phase, resetWipe]);
+
   if (phase === 'idle') return null;
 
   const covering = phase === 'cover';
@@ -50,13 +61,15 @@ export default function StrataWipe() {
           style={{ background: `var(--strata-${(i % 6) + 1})`, originY: covering ? 1 : 0 }}
           initial={{ scaleY: covering ? 0 : 1 }}
           animate={{ scaleY: covering ? 1 : 0 }}
-          transition={{ duration: 0.5, ease: ease.strata, delay: i * 0.045 }}
+          transition={{ duration: 0.45, ease: ease.strata, delay: i * 0.04 }}
           onAnimationComplete={() => {
-            if (i === BANDS - 1) (covering ? finishCover : finishReveal)();
+            if (i === BANDS - 1) {
+              if (covering) finishCover();
+              else finishReveal();
+            }
           }}
         />
       ))}
     </div>
   );
 }
-
