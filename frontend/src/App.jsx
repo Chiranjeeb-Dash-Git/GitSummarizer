@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import SmoothScroll from './components/layout/SmoothScroll.jsx';
 import ScrollToTop from './components/layout/ScrollToTop.jsx';
 import Navbar from './components/layout/Navbar.jsx';
@@ -20,11 +20,14 @@ const Register = lazy(() => import('./pages/Register.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 
 export default function App() {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
   return (
     <SmoothScroll>
       <a href="#main" className="skip-link">Skip to content</a>
-      <GrainOverlay />
-      <Navbar />
+      {!isHome && <GrainOverlay />}
+      {!isHome && <Navbar />}
       <main id="main" tabIndex={-1} className="min-h-[70vh] outline-none">
         <ScrollToTop />
         <Suspense fallback={<RouteFallback />}>
@@ -39,11 +42,10 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <Footer />
+      {!isHome && <Footer />}
       <StrataWipe />
       <ToastHost />
       <CommandPalette />
     </SmoothScroll>
   );
 }
-
