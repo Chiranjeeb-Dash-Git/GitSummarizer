@@ -5,6 +5,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [inputVal, setInputVal] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [analysisKind, setAnalysisKind] = useState('overview');
   const termRef = useRef(null);
   const curRef = useRef(null);
 
@@ -140,12 +141,7 @@ export default function Home() {
       return;
     }
     setErrorMsg('');
-    navigate(`/read?input=${encodeURIComponent(val)}&kind=overview&audience=learner`);
-  };
-
-  const handleChip = (u) => {
-    setInputVal(u);
-    navigate(`/read?input=${encodeURIComponent(u)}&kind=overview&audience=learner`);
+    navigate(`/read?input=${encodeURIComponent(val)}&kind=${analysisKind}&audience=learner`);
   };
 
   return (
@@ -332,33 +328,38 @@ export default function Home() {
                   {errorMsg}
                 </p>
               )}
-              <div className="mt-3 flex flex-wrap items-center justify-center gap-2.5 text-sm font-bold text-[#0A0A0A]">
-                <span>Try:</span>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-sm font-bold text-[#0A0A0A]">
+                <span className="text-[#5B5B52]">Mode:</span>
                 <button
                   type="button"
-                  onClick={() => handleChip('expressjs/express')}
-                  className="chip nb press lift rounded-full bg-white px-4 py-1.5 text-[#0A0A0A]"
+                  onClick={() => setAnalysisKind('overview')}
+                  className={`nb press lift rounded-full px-5 py-2 transition-colors ${
+                    analysisKind === 'overview'
+                      ? 'bg-[#FFD60A] ring-2 ring-[#0A0A0A]'
+                      : 'bg-white hover:bg-[#FFF5DC]'
+                  }`}
                   style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
                 >
-                  expressjs/express
+                  📄 Project Summary
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleChip('vitejs/vite')}
-                  className="chip nb press lift rounded-full bg-white px-4 py-1.5 text-[#0A0A0A]"
+                  onClick={() => setAnalysisKind('commit')}
+                  className={`nb press lift rounded-full px-5 py-2 transition-colors ${
+                    analysisKind === 'commit'
+                      ? 'bg-[#B5F23D] ring-2 ring-[#0A0A0A]'
+                      : 'bg-white hover:bg-[#FFF5DC]'
+                  }`}
                   style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
                 >
-                  vitejs/vite
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleChip('facebook/react')}
-                  className="chip nb press lift rounded-full bg-white px-4 py-1.5 text-[#0A0A0A]"
-                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
-                >
-                  facebook/react
+                  🔀 Commit Overview
                 </button>
               </div>
+              <p className="mt-2 text-center text-xs font-medium text-[#5B5B52]">
+                {analysisKind === 'overview'
+                  ? 'Reads README, structure & docs → clear project summary'
+                  : 'Parses all git commits → structured changelog & release notes'}
+              </p>
             </div>
           </div>
         </section>
