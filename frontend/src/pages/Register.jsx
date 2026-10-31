@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Clock, Mail, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Mail } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.js';
 import { WipeLink, useWipeNavigate } from '../components/effects/StrataWipe.jsx';
 import Field from '../components/ui/Field.jsx';
@@ -16,7 +16,6 @@ export default function Register() {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState('form'); // 'form' | 'otp'
   const [countdown, setCountdown] = useState(60);
-  const [devOtpHint, setDevOtpHint] = useState(null);
   const target = location.state?.from ?? '/dashboard';
 
   useEffect(() => {
@@ -32,14 +31,9 @@ export default function Register() {
   const submitRegister = (e) => {
     e.preventDefault();
     register.mutate(form, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         setStep('otp');
         setCountdown(60);
-        if (res.data?.code) {
-          setDevOtpHint(res.data.code);
-        } else {
-          setDevOtpHint(null);
-        }
         toast.success(`Verification code dispatched for ${form.email}`);
       },
     });
@@ -64,9 +58,8 @@ export default function Register() {
     resendCode.mutate(
       { email: form.email },
       {
-        onSuccess: (res) => {
+        onSuccess: () => {
           setCountdown(60);
-          if (res.data?.code) setDevOtpHint(res.data.code);
           toast.success('A fresh verification code has been dispatched.');
         },
         onError: (err) => {
@@ -169,29 +162,6 @@ export default function Register() {
             <p className="mt-2 text-sm text-muted leading-relaxed">
               We dispatched a 6-digit confirmation code for <strong className="font-semibold text-ink">{form.email}</strong>.
             </p>
-
-            {devOtpHint && (
-              <div className="mt-4 rounded-field border border-ochre/40 bg-surface-2 p-3 text-xs leading-relaxed text-ink">
-                <div className="flex items-center gap-1.5 font-bold text-ochre mb-1">
-                  <ShieldAlert size={15} />
-                  <span>Resend Test Domain Notice</span>
-                </div>
-                <p className="text-muted">
-                  Resend's free trial domain only delivers to your account address (<code className="text-ochre">chiranjeeb.email@gmail.com</code>).
-                  For other emails, your code is provided below:
-                </p>
-                <div className="mt-2 flex items-center justify-between rounded bg-paper px-3 py-1.5 font-mono font-bold text-malachite text-sm">
-                  <span>Code: {devOtpHint}</span>
-                  <button
-                    type="button"
-                    onClick={() => setOtp(devOtpHint)}
-                    className="text-xs font-sans text-ink underline hover:text-malachite"
-                  >
-                    Auto-fill
-                  </button>
-                </div>
-              </div>
-            )}
 
             {otpErr && (
               <p role="alert" className="mt-5 rounded-field border border-oxide bg-surface px-4 py-3 text-sm font-medium text-oxide">

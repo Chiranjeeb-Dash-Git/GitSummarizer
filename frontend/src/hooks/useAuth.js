@@ -13,7 +13,10 @@ export function useAuth() {
 
   const login = useMutation({
     mutationFn: (body) => api.post('/auth/login', body),
-    onSuccess: (r) => qc.setQueryData(['me'], r.data.user),
+    onSuccess: (r) => {
+      qc.setQueryData(['me'], r.data.user);
+      qc.invalidateQueries({ queryKey: ['summary'] });
+    },
   });
 
   const register = useMutation({
@@ -22,7 +25,10 @@ export function useAuth() {
 
   const verifyEmail = useMutation({
     mutationFn: (body) => api.post('/auth/verify-email', body),
-    onSuccess: (r) => qc.setQueryData(['me'], r.data.user),
+    onSuccess: (r) => {
+      qc.setQueryData(['me'], r.data.user);
+      qc.invalidateQueries({ queryKey: ['summary'] });
+    },
   });
 
   const resendCode = useMutation({
@@ -33,7 +39,7 @@ export function useAuth() {
     mutationFn: () => api.post('/auth/logout'),
     onSuccess: () => {
       qc.setQueryData(['me'], null);
-      qc.removeQueries({ predicate: (q) => ['history', 'saved', 'stats'].includes(q.queryKey[0]) });
+      qc.removeQueries({ predicate: (q) => ['history', 'saved', 'stats', 'summary'].includes(q.queryKey[0]) });
     },
   });
 
