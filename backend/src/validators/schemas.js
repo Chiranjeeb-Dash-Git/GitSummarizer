@@ -38,7 +38,7 @@ export const summaryRequestSchema = z.object({
       sha: z.string().regex(/^[0-9a-f]{7,40}$/i).optional(),
       refresh: z.boolean().default(false),
     })
-    .prefault({}),
+    .default({}),
 });
 
 export const previewQuerySchema = z.object({ input: z.string().trim().min(3).max(300) });

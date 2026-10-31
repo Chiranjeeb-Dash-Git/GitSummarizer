@@ -86,18 +86,18 @@ export default function Home() {
     if (!term) return;
 
     const L = [
-      '<span class="text-coral">$</span> gitvision read github.com/acme/atlas --for maintainers',
-      '<span class="text-lime">✓</span> <span class="text-paper/70">resolved acme/atlas (TypeScript, 12.4k stars)</span>',
-      '<span class="text-lime">✓</span> <span class="text-paper/70">read README, 38 top-level files, 120 commits</span>',
+      '<span style="color:#FF5C3A">$</span> gitvision read github.com/acme/atlas --for maintainers',
+      '<span style="color:#12B76A">✓</span> <span style="color:rgba(255,245,220,0.7)">resolved acme/atlas (TypeScript, 12.4k stars)</span>',
+      '<span style="color:#12B76A">✓</span> <span style="color:rgba(255,245,220,0.7)">read README, 38 top-level files, 120 commits</span>',
       '',
       '{',
-      '  <span class="text-sun">"summary"</span>: <span class="text-lime">"A multi-tenant billing engine with a ledger core."</span>,',
-      '  <span class="text-sun">"modules"</span>: [<span class="text-lime">"ledger"</span>, <span class="text-lime">"invoicing"</span>, <span class="text-lime">"webhooks"</span>],',
-      '  <span class="text-sun">"hotspots"</span>: <span class="text-pink">3</span>, <span class="text-paper/60">// all inside /ledger</span>',
-      '  <span class="text-sun">"risk"</span>: <span class="text-lime">"low"</span>',
+      '  <span style="color:#FFD60A">"summary"</span>: <span style="color:#B5F23D">"A multi-tenant billing engine with a ledger core."</span>,',
+      '  <span style="color:#FFD60A">"modules"</span>: [<span style="color:#B5F23D">"ledger"</span>, <span style="color:#B5F23D">"invoicing"</span>, <span style="color:#B5F23D">"webhooks"</span>],',
+      '  <span style="color:#FFD60A">"hotspots"</span>: <span style="color:#FF9EC4">3</span>, <span style="color:rgba(255,245,220,0.6)">// all inside /ledger</span>',
+      '  <span style="color:#FFD60A">"risk"</span>: <span style="color:#B5F23D">"low"</span>',
       '}',
       '',
-      '<span class="text-coral">→</span> release notes ready in <span class="text-sun">2.8s</span> <span class="gv-blink inline-block h-4 w-2 bg-sun align-[-2px]"></span>',
+      '<span style="color:#FF5C3A">→</span> release notes ready in <span style="color:#FFD60A">2.8s</span> <span class="gv-blink inline-block h-4 w-2 bg-[#FFD60A] align-[-2px]"></span>',
     ];
 
     let started = false;
@@ -421,14 +421,14 @@ export default function Home() {
             <h2 className="font-['Archivo_Black'] text-4xl sm:text-6xl">Watch it <span className="hl">read.</span></h2>
             <p className="mx-auto mt-5 max-w-xl text-lg font-medium text-[#0A0A0A]">A repository goes in. Structured understanding comes out.</p>
           </div>
-          <div className="nb gv-reveal overflow-hidden bg-[#0A0A0A]" style={{ boxShadow: '10px 10px 0 #FF5C3A' }}>
+          <div className="nb gv-reveal overflow-hidden bg-[#0A0A0A] rounded-xl" style={{ boxShadow: '10px 10px 0 #FF5C3A' }}>
             <div className="flex items-center gap-2 border-b-[3px] border-[#0A0A0A] bg-[#FFD60A] px-4 py-3 text-[#0A0A0A]">
-              <i className="h-4 w-4 rounded-full border-[3px] border-[#0A0A0A] bg-[#FF5C3A]" />
-              <i className="h-4 w-4 rounded-full border-[3px] border-[#0A0A0A] bg-white" />
-              <i className="h-4 w-4 rounded-full border-[3px] border-[#0A0A0A] bg-[#12B76A]" />
-              <span className="ml-3 font-mono text-xs font-bold">gitvision: acme/atlas</span>
+              <i className="h-4 w-4 rounded-full border-[3px] border-[#0A0A0A] bg-[#FF5C3A] inline-block" />
+              <i className="h-4 w-4 rounded-full border-[3px] border-[#0A0A0A] bg-white inline-block" />
+              <i className="h-4 w-4 rounded-full border-[3px] border-[#0A0A0A] bg-[#12B76A] inline-block" />
+              <span className="ml-3 font-mono text-xs font-bold text-[#0A0A0A]">gitvision: acme/atlas</span>
             </div>
-            <pre ref={termRef} className="min-h-[22rem] overflow-x-auto p-5 font-mono text-[13px] leading-7 text-white sm:p-7 sm:text-sm" aria-label="Terminal output sample" />
+            <pre ref={termRef} className="min-h-[22rem] overflow-x-auto p-5 font-mono text-[13px] leading-7 text-[#FFF5DC] sm:p-7 sm:text-sm whitespace-pre font-bold" aria-label="Terminal output sample" />
           </div>
         </section>
 
