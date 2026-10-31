@@ -14,6 +14,7 @@ const schema = z
     COOKIE_DOMAIN: z.string().optional(),
     GITHUB_TOKEN: z.string().optional(),
     RESEND_API_KEY: z.string().optional(),
+    EMAIL_FROM: z.string().trim().min(1).optional(),
     AI_PROVIDER: z.enum(['openai', 'anthropic', 'gemini']).default('gemini'),
     OPENAI_API_KEY: z.string().optional(),
     OPENAI_MODEL: z.string().default('gpt-4o-mini'),
@@ -28,6 +29,9 @@ const schema = z
     LOG_LEVEL: z.string().default('info'),
   })
   .superRefine((v, ctx) => {
+    if (v.NODE_ENV === 'production' && v.RESEND_API_KEY && !v.EMAIL_FROM) {
+      ctx.addIssue({ code: 'custom', path: ['EMAIL_FROM'], message: 'Required when email delivery is enabled in production' });
+    }
     if (v.AI_PROVIDER === 'openai' && !v.OPENAI_API_KEY) {
       ctx.addIssue({ code: 'custom', path: ['OPENAI_API_KEY'], message: 'Required when AI_PROVIDER=openai' });
     }
@@ -49,6 +53,7 @@ if (!parsed.success) {
 
 export const env = {
   ...parsed.data,
+  EMAIL_FROM: parsed.data.EMAIL_FROM ?? 'GitSummarizer <onboarding@resend.dev>',
   isProd: parsed.data.NODE_ENV === 'production',
   serveClient: parsed.data.SERVE_CLIENT === 'true',
   clientOrigins: parsed.data.CLIENT_ORIGIN.split(',').map((s) => s.trim()).filter(Boolean),

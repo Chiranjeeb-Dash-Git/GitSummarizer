@@ -132,10 +132,20 @@ Backed by **Neon Serverless PostgreSQL** through high-speed connection pooling a
 
 ---
 
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:dfd2ac4978c31893af4bea39fcf68528332322c506479f4f97ded48a3f97cc83 -->
+
 ## 🚀 Quickstart Terminal Commands
 
 ### Prerequisites
-- **Node.js**: `v20.0.0` or higher
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:a23a384e58e0f116928df7f2af61c53b72bbb98fe5e3dc92b54481a86ef5b29d -->
+
+- **Node.js**: Node 20.19+, Node 22.13+, or Node 24+ (supported by the security tooling)
+
+<!-- /coderabbit-ai-generated:v1 -->
 - **npm**: `v10.0.0` or higher
 - **Git**
 
@@ -171,8 +181,11 @@ cd ..
 
 ### 5. Launch Full-Stack Development Environment
 ```bash
-# Run both Backend (:8080) and Frontend (:5173) concurrently
-npm run dev
+# Terminal 1: Backend (:8080)
+npm run dev:api
+
+# Terminal 2: Frontend (:5173)
+npm run dev:web
 ```
 
 Visit [`http://localhost:5173`](http://localhost:5173) in your browser.
@@ -186,7 +199,7 @@ Visit [`http://localhost:5173`](http://localhost:5173) in your browser.
 # Server Configuration
 PORT=8080
 NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
+CLIENT_ORIGIN=http://localhost:5173
 
 # Neon PostgreSQL Serverless Connection String
 DATABASE_URL=postgresql://<user>:<password>@<ep-pooler-domain>.neon.tech/neondb?sslmode=require&channel_binding=require
@@ -202,16 +215,24 @@ OPENAI_MODEL=gpt-4o-mini
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
 ANTHROPIC_MODEL=claude-3-5-sonnet-20241022
 
+# Email verification (use a verified sender domain in production)
+RESEND_API_KEY=your_resend_api_key_here
+EMAIL_FROM=GitSummarizer <hello@your-verified-domain.example>
+
 # Security & Authentication
 JWT_SECRET=super_secret_cryptographic_jwt_key_at_least_32_chars
 ```
 
 ### Frontend: `frontend/.env`
 ```ini
-VITE_API_URL=http://localhost:8080
+VITE_API_BASE_URL=http://localhost:8080/api/v1
 ```
 
 ---
+
+Registration requires successful email delivery. Verification codes are never included in API responses. For local email testing, point the Resend SDK at a local emulator with `RESEND_BASE_URL`; use synthetic credentials.
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 ## ⚡ Deployment Playbook
 
@@ -224,8 +245,15 @@ VITE_API_URL=http://localhost:8080
    - `AI_PROVIDER`
    - `GEMINI_API_KEY`
    - `GEMINI_MODEL`
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:cd601f91b39208b22c1b2763323c7a92fddc54fa441169c68ad9f86f91477d6f -->
+
    - `JWT_SECRET`
+   - `RESEND_API_KEY` and `EMAIL_FROM` (a verified sender for registration emails)
    - `NODE_ENV=production`
+
+<!-- /coderabbit-ai-generated:v1 -->
 5. Click **Deploy**. Vercel will automatically build the client bundle and route API routes via Serverless Functions.
 
 ---

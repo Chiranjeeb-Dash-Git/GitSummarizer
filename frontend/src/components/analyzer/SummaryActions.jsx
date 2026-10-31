@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../lib/api.js';
 import { Bookmark, Copy, Download, Link2, RefreshCw } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import SaveDialog from './SaveDialog.jsx';
@@ -53,7 +55,13 @@ export default function SummaryActions({ summary, markdown, saved, streaming, on
     }
   };
 
-  const isSaved = Boolean(saved);
+  const { data, isPending: saveLoading, isError: saveError } = useQuery({
+    queryKey: ['summary', summary?.id],
+    queryFn: () => api.get(`/summaries/${summary.id}`).then((r) => r.data),
+    enabled: Boolean(user && summary?.id && !streaming),
+  });
+  const currentSave = user ? (data ? data.saved : saved) : null;
+  const isSaved = Boolean(currentSave);
 
   return (
     <>
@@ -61,7 +69,7 @@ export default function SummaryActions({ summary, markdown, saved, streaming, on
         <Button
           variant="ghost"
           onClick={onSaveClick}
-          disabled={streaming || !summary}
+          disabled={streaming || !summary || Boolean(user && (saveLoading || saveError))}
           aria-label={isSaved ? 'Saved' : 'Save'}
         >
           <Bookmark size={16} className={isSaved ? 'fill-current text-malachite' : ''} />
@@ -111,14 +119,16 @@ export default function SummaryActions({ summary, markdown, saved, streaming, on
         )}
       </div>
 
-      {summary && (
+      {user && saveError && <p role="alert" className="mt-2 text-sm text-oxide">Could not load save details. Reload to try again.</p>}
+      {summary && saveOpen && (!user || data) && (
         <SaveDialog
+          key={`${summary.id}:${currentSave?.id ?? 'new'}`}
           open={saveOpen}
           onClose={() => setSaveOpen(false)}
           summaryId={summary.id}
-          savedId={saved?.id}
-          initialNote={saved?.note ?? ''}
-          initialTags={saved?.tags ?? []}
+          savedId={currentSave?.id}
+          initialNote={currentSave?.note ?? ''}
+          initialTags={currentSave?.tags ?? []}
         />
       )}
     </>

@@ -80,6 +80,7 @@ export function useAnalyze() {
       await streamSummary(params, {
         signal: controller.signal,
         onEvent: (event, data) => {
+          if (controller.signal.aborted) return;
           if (event === 'delta') {
             bufferRef.current += data.text;
             rafRef.current ??= requestAnimationFrame(flush); // batch many tiny deltas into one render per frame

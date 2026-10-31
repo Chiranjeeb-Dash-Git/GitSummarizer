@@ -27,7 +27,7 @@ export default function HistoryList() {
   } = useInfiniteQuery({
     queryKey: ['history'],
     queryFn: ({ pageParam }) =>
-      api.get(`/history?limit=20${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ''}`).then((r) => r.data),
+      api.get(`/history?limit=20${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ''}`).then((r) => ({ items: r.data, nextCursor: r.nextCursor })),
     getNextPageParam: (last) => last?.nextCursor ?? undefined,
     initialPageParam: null,
   });
