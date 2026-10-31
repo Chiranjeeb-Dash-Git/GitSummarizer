@@ -36,7 +36,7 @@ export const TRANSLATION_ROWS = [
 export const ERROR_HELP = {
   INVALID_URL: 'Use a link like github.com/owner/repo, or just owner/repo.',
   REPO_NOT_FOUND: 'Check the spelling. Private repositories cannot be read.',
-  COMMIT_REQUIRED: 'Paste a link that ends in /commit/ and a commit hash, or choose Overview.',
+  COMMIT_REQUIRED: 'Paste a commit link, or enter a repository and commit hash.',
   GITHUB_RATE_LIMITED: 'GitHub is limiting requests. Wait a minute and try again.',
   AI_UNAVAILABLE: 'The writing engine is not responding. Try again in a moment.',
   AI_RATE_LIMITED: 'The writing engine is busy. Try again in a minute.',

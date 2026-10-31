@@ -11,7 +11,7 @@ export function useRepoPreview(input) {
 
   const enabled = debounced.length >= 3 && /[\w.-]+\/[\w.-]+/.test(debounced);
 
-  return useQuery({
+  const query = useQuery({
     queryKey: ['preview', debounced],
     enabled,
     retry: false,
@@ -19,5 +19,7 @@ export function useRepoPreview(input) {
     queryFn: ({ signal }) =>
       api.get(`/repos/preview?input=${encodeURIComponent(debounced)}`, { signal }).then((r) => r.data),
   });
+  // Ignore the previous result while the next input is being debounced.
+  return debounced === input.trim() ? query : { ...query, data: undefined, error: null, isPending: true };
 }
 
