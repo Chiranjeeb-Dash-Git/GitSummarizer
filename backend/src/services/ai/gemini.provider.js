@@ -16,6 +16,8 @@ export async function streamGemini({ system, user, maxTokens, signal, onText }) 
 
   let lastError;
   for (const modelName of CANDIDATE_MODELS) {
+    signal?.throwIfAborted();
+    let text = '';
     try {
       const model = genAI.getGenerativeModel({
         model: modelName,
@@ -28,11 +30,12 @@ export async function streamGemini({ system, user, maxTokens, signal, onText }) 
 
       const result = await model.generateContentStream({
         contents: [{ role: 'user', parts: [{ text: user }] }],
-      });
+      }, { signal });
+      // The SDK aggregates a second stream into this promise, which can reject independently.
+      void result.response.catch(() => undefined);
 
-      let text = '';
       for await (const chunk of result.stream) {
-        if (signal?.aborted) throw new Error('AbortError');
+        signal?.throwIfAborted();
         const chunkText = chunk.text();
         if (chunkText) {
           text += chunkText;
@@ -40,7 +43,6 @@ export async function streamGemini({ system, user, maxTokens, signal, onText }) 
         }
       }
 
-      // If less than 200 characters were generated, this is an incomplete or corrupted stream
       if (text.trim().length < 200) {
         throw new Error(`Incomplete output from ${modelName} (${text.length} chars)`);
       }
@@ -58,7 +60,7 @@ export async function streamGemini({ system, user, maxTokens, signal, onText }) 
         },
       };
     } catch (err) {
-      if (err.message === 'AbortError') throw err;
+      if (signal?.aborted || text) throw err;
       lastError = err;
       console.warn(`[Gemini] model ${modelName} attempt failed or incomplete: ${err.message}. Trying fallback...`);
     }

@@ -23,7 +23,7 @@ export default function SavedList() {
       const q = new URLSearchParams();
       if (search.trim()) q.set('q', search.trim());
       if (selectedTag) q.set('tag', selectedTag);
-      return api.get(`/saved?${q.toString()}`).then((r) => r.data);
+      return api.get(`/saved?${q.toString()}`).then((r) => ({ items: r.data, tags: r.tags }));
     },
   });
 
@@ -93,13 +93,13 @@ export default function SavedList() {
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <WipeLink
-                    to={`/r/${item.summary?.id}`}
+                    to={`/r/${item.summaryId}`}
                     className="font-display text-lg font-bold text-ink hover:text-malachite"
                   >
-                    {item.summary?.title || item.summary?.repository?.fullName}
+                    {item.title || item.repository?.fullName}
                   </WipeLink>
                   <span className="text-xs text-muted">
-                    ({item.summary?.repository?.fullName})
+                    ({item.repository?.fullName})
                   </span>
                 </div>
 
@@ -139,7 +139,7 @@ export default function SavedList() {
         <SaveDialog
           open={Boolean(editingItem)}
           onClose={() => setEditingItem(null)}
-          summaryId={editingItem.summary?.id}
+          summaryId={editingItem.summaryId}
           savedId={editingItem.id}
           initialNote={editingItem.note}
           initialTags={editingItem.tags}

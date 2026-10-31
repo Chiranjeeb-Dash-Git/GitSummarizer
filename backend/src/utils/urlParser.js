@@ -16,6 +16,14 @@ function finish(result) {
   return result;
 }
 
+function decodeRef(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    throw new InvalidGitHubUrlError('That link contains invalid encoding.');
+  }
+}
+
 export function parseGitHubInput(raw) {
   if (typeof raw !== 'string') throw new InvalidGitHubUrlError('Enter a GitHub link.');
   let s = raw.trim();
@@ -47,16 +55,17 @@ export function parseGitHubInput(raw) {
   }
 
   if (section === 'compare' && rest.length) {
-    const spec = decodeURIComponent(rest.join('/'));
-    const [a, b] = spec.split(/\.{2,3}/);
-    if (!a || !b || !REF_RE.test(a) || !REF_RE.test(b)) {
+    const spec = decodeRef(rest.join('/'));
+    const refs = spec.split(/\.{2,3}/);
+    const [a, b] = refs;
+    if (refs.length !== 2 || !a || !b || !REF_RE.test(a) || !REF_RE.test(b)) {
       throw new InvalidGitHubUrlError('The compare link should look like base...head.');
     }
     return finish({ ...base, type: 'compare', base: a, head: b });
   }
 
   if ((section === 'tree' || section === 'commits') && rest[0]) {
-    const ref = decodeURIComponent(rest[0]);
+    const ref = decodeRef(rest[0]);
     if (REF_RE.test(ref)) return finish({ ...base, type: 'repo', ref });
   }
 

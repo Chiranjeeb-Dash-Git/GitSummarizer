@@ -19,6 +19,15 @@ export const loginSchema = z.object({
   password: z.string().min(1).max(72),
 });
 
+export const verifyEmailSchema = z.object({
+  email: z.string().trim().toLowerCase().email().max(254),
+  code: z.string().trim().regex(/^\d{6}$/),
+});
+
+export const resendCodeSchema = z.object({
+  email: z.string().trim().toLowerCase().email().max(254),
+});
+
 export const summaryRequestSchema = z.object({
   input: z.string().trim().min(3).max(300),
   kind: z.enum(['overview', 'release_notes', 'commit']).default('overview'),
@@ -29,7 +38,7 @@ export const summaryRequestSchema = z.object({
       sha: z.string().regex(/^[0-9a-f]{7,40}$/i).optional(),
       refresh: z.boolean().default(false),
     })
-    .default({}),
+    .prefault({}),
 });
 
 export const previewQuerySchema = z.object({ input: z.string().trim().min(3).max(300) });

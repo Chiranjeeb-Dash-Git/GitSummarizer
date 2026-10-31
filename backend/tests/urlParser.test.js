@@ -33,6 +33,12 @@ test('parses compare links', () => {
   assert.deepEqual([r.type, r.base, r.head], ['compare', 'v5.0.0', 'v5.1.0']);
 });
 
+test('rejects malformed encoded refs and ambiguous compare ranges', () => {
+  for (const input of ['a/b/tree/%ZZ', 'a/b/compare/%ZZ...main', 'a/b/compare/a...b...c']) {
+    assert.throws(() => parseGitHubInput(input), InvalidGitHubUrlError);
+  }
+});
+
 test('keeps dots inside repository names', () => {
   assert.equal(parseGitHubInput('vercel/next.js').repo, 'next.js');
 });
