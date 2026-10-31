@@ -344,9 +344,9 @@ export default function Home() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setAnalysisKind('commit')}
+                  onClick={() => setAnalysisKind('release_notes')}
                   className={`nb press lift rounded-full px-5 py-2 transition-colors ${
-                    analysisKind === 'commit'
+                    analysisKind === 'release_notes'
                       ? 'bg-[#B5F23D] ring-2 ring-[#0A0A0A]'
                       : 'bg-white hover:bg-[#FFF5DC]'
                   }`}
@@ -358,7 +358,7 @@ export default function Home() {
               <p className="mt-2 text-center text-xs font-medium text-[#5B5B52]">
                 {analysisKind === 'overview'
                   ? 'Reads README, structure & docs → clear project summary'
-                  : 'Parses all git commits → structured changelog & release notes'}
+                  : 'Parses recent commits & changes → structured changelog & release notes'}
               </p>
             </div>
           </div>
