@@ -8,16 +8,18 @@ export function openSSE(_req, res) {
   res.flushHeaders();
 
   const controller = new AbortController();
-  res.on('close', () => {
-    if (!res.writableEnded) controller.abort();
-  });
 
   const send = (event, data) => {
-    if (!res.writableEnded) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+    if (!res.writableEnded && !res.destroyed) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   };
   const heartbeat = setInterval(() => {
-    if (!res.writableEnded) res.write(': ping\n\n');
+    if (!res.writableEnded && !res.destroyed) res.write(': ping\n\n');
   }, 15_000);
+
+  res.on('close', () => {
+    clearInterval(heartbeat);
+    if (!res.writableEnded) controller.abort();
+  });
 
   const close = () => {
     clearInterval(heartbeat);

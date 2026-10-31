@@ -16,8 +16,8 @@ r.get('/health', health.live);
 r.get('/health/ready', health.ready);
 
 r.post('/auth/register', authLimiter, validate(s.registerSchema), auth.register);
-r.post('/auth/verify-email', authLimiter, auth.verifyEmail);
-r.post('/auth/resend-code', authLimiter, auth.resendOtp);
+r.post('/auth/verify-email', authLimiter, validate(s.verifyEmailSchema), auth.verifyEmail);
+r.post('/auth/resend-code', authLimiter, validate(s.resendCodeSchema), auth.resendOtp);
 r.post('/auth/login', authLimiter, validate(s.loginSchema), auth.login);
 r.post('/auth/logout', auth.logout);
 r.get('/auth/me', auth.me);

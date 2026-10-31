@@ -3,14 +3,14 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
 import { AppError } from '../utils/AppError.js';
-import { query } from '../db/pool.js';
+import { query, withTransaction } from '../db/pool.js';
 import * as users from '../repositories/users.repo.js';
 import * as emailService from './email.service.js';
 
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 
 function generateOtp() {
-  return String(crypto.randomInt(100000, 999999));
+  return String(crypto.randomInt(100000, 1000000));
 }
 
 export async function initiateRegistration({ email, password, displayName }) {
@@ -25,15 +25,15 @@ export async function initiateRegistration({ email, password, displayName }) {
   const code = generateOtp();
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-  await query('DELETE FROM email_verifications WHERE email = $1', [normEmail]);
-
   await query(
     `INSERT INTO email_verifications (email, code, password_hash, display_name, expires_at)
-     VALUES ($1, $2, $3, $4, $5)`,
+     VALUES ($1, $2, $3, $4, $5)
+     ON CONFLICT (email) DO UPDATE SET code = EXCLUDED.code, password_hash = EXCLUDED.password_hash,
+       display_name = EXCLUDED.display_name, expires_at = EXCLUDED.expires_at, created_at = now()`,
     [normEmail, code, passwordHash, displayName.trim(), expiresAt],
   );
 
-  const dispatchResult = await emailService.sendVerificationOtp({
+  await emailService.sendVerificationOtp({
     email: normEmail,
     code,
     displayName: displayName.trim(),
@@ -42,8 +42,6 @@ export async function initiateRegistration({ email, password, displayName }) {
   return {
     email: normEmail,
     expiresAt,
-    code: dispatchResult.resendBlocked ? code : undefined,
-    resendBlocked: dispatchResult.resendBlocked,
   };
 }
 
@@ -51,25 +49,23 @@ export async function verifyRegistrationOtp({ email, code }) {
   const normEmail = email.toLowerCase().trim();
   const cleanCode = String(code).trim();
 
-  const { rows } = await query(
-    `SELECT * FROM email_verifications
-      WHERE email = $1 AND code = $2 AND expires_at > now()
-      ORDER BY created_at DESC LIMIT 1`,
-    [normEmail, cleanCode],
-  );
-
-  if (!rows.length) {
-    throw new AppError(400, 'INVALID_OTP', 'The verification code is incorrect or has expired.');
-  }
-
-  const pending = rows[0];
-
-  let user;
   try {
-    user = await users.create({
-      email: pending.email,
-      passwordHash: pending.password_hash,
-      displayName: pending.display_name,
+    return await withTransaction(async (client) => {
+      const { rows } = await client.query(
+        `DELETE FROM email_verifications
+          WHERE email = $1 AND code = $2 AND expires_at > now()
+          RETURNING *`,
+        [normEmail, cleanCode],
+      );
+      if (!rows.length) {
+        throw new AppError(400, 'INVALID_OTP', 'The verification code is incorrect or has expired.');
+      }
+      const pending = rows[0];
+      const result = await client.query(
+        'INSERT INTO users (email, password_hash, display_name) VALUES ($1, $2, $3) RETURNING *',
+        [pending.email, pending.password_hash, pending.display_name],
+      );
+      return result.rows[0];
     });
   } catch (err) {
     if (err.code === '23505') {
@@ -77,10 +73,6 @@ export async function verifyRegistrationOtp({ email, code }) {
     }
     throw err;
   }
-
-  await query('DELETE FROM email_verifications WHERE email = $1', [normEmail]);
-
-  return user;
 }
 
 export async function resendVerificationOtp({ email }) {
@@ -103,7 +95,7 @@ export async function resendVerificationOtp({ email }) {
     [newCode, expiresAt, pending.id],
   );
 
-  const dispatchResult = await emailService.sendVerificationOtp({
+  await emailService.sendVerificationOtp({
     email: normEmail,
     code: newCode,
     displayName: pending.display_name,
@@ -112,8 +104,6 @@ export async function resendVerificationOtp({ email }) {
   return {
     email: normEmail,
     expiresAt,
-    code: dispatchResult.resendBlocked ? newCode : undefined,
-    resendBlocked: dispatchResult.resendBlocked,
   };
 }
 
