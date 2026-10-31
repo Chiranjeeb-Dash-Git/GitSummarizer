@@ -41,7 +41,7 @@ export default function SummaryActions({ summary, markdown, saved, streaming, on
     a.href = url;
     a.download = name;
     a.click();
-    URL.revokeObjectURL(a);
+    URL.revokeObjectURL(url);
     toast.success('Downloaded');
   };
 

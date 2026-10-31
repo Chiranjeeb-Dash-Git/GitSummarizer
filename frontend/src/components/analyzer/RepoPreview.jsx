@@ -31,11 +31,11 @@ export default function RepoPreview({ query, enabled }) {
         </div>
       )}
 
-      {!isPending && !error && data && data.repo && (
+      {!isPending && !error && data?.repository && (
         <div className="rounded-field border border-line-strong bg-surface-2 p-4 shadow-slab-sm">
           <div className="flex items-start gap-3.5">
             <img
-              src={data.repo.avatarUrl}
+              src={data.repository.avatarUrl}
               alt=""
               width="40"
               height="40"
@@ -43,24 +43,24 @@ export default function RepoPreview({ query, enabled }) {
             />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <span className="font-display text-lg font-bold">{data.repo.fullName}</span>
-                {data.repo.language && (
+                <span className="font-display text-lg font-bold">{data.repository.fullName}</span>
+                {data.repository.language && (
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold">
                     <span
                       className="h-2 w-2 rounded-full"
-                      style={{ background: `var(--strata-${hashColor(data.repo.language)})` }}
+                      style={{ background: `var(--strata-${hashColor(data.repository.language)})` }}
                       aria-hidden="true"
                     />
-                    {data.repo.language}
+                    {data.repository.language}
                   </span>
                 )}
                 <span className="inline-flex items-center gap-1 text-xs text-muted">
                   <Star size={13} aria-hidden="true" />
-                  {formatCompact(data.repo.stars)}
+                  {formatCompact(data.repository.stars)}
                 </span>
               </div>
-              {data.repo.description && (
-                <p className="mt-1 line-clamp-2 text-sm text-muted">{data.repo.description}</p>
+              {data.repository.description && (
+                <p className="mt-1 line-clamp-2 text-sm text-muted">{data.repository.description}</p>
               )}
               {data.parsed?.type === 'commit' && (
                 <p className="mt-2 text-xs font-medium text-verdigris">

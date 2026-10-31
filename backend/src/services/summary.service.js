@@ -38,6 +38,7 @@ export async function runSummary({ input, kind, audience, options, userId, emit,
 
   const branch = parsed.ref ?? repo.defaultBranch;
   const limit = options.limit;
+  const promptVersion = effectiveKind === 'overview' ? `${env.PROMPT_VERSION}:scan2` : env.PROMPT_VERSION;
 
   // Work out the cache reference without spending extra GitHub calls where possible.
   let commitData = null;
@@ -60,6 +61,7 @@ export async function runSummary({ input, kind, audience, options, userId, emit,
       audience,
       ref,
       immutable: effectiveKind === 'commit',
+      promptVersion,
     });
     if (hit) {
       emit('stage', { key: 'cache', label: 'Found a recent summary' });
@@ -109,7 +111,18 @@ export async function runSummary({ input, kind, audience, options, userId, emit,
       github.getLanguages(repo.owner, repo.name),
       github.listCommits(repo.owner, repo.name, { ref: branch, limit: 10 }),
     ]);
-    context = buildOverviewContext({ repo, readme, rootEntries, languages, commits });
+    const scanRef = commits[0]?.sha ?? branch;
+    let tree = { entries: [], truncated: true };
+    let files = [];
+    try {
+      tree = await github.getRepositoryTree(repo.owner, repo.name, scanRef);
+      files = await github.getOverviewFiles(repo.owner, repo.name, scanRef, tree.entries);
+    } catch (err) {
+      if (!(err instanceof AppError) || err.code !== 'GITHUB_UNAVAILABLE') throw err;
+      // Preserve the overview when the optional deeper scan is unavailable.
+      tree = { ...tree, truncated: true };
+    }
+    context = buildOverviewContext({ repo, readme, rootEntries, languages, commits, tree, files });
     headSha = commits[0]?.sha ?? 'none';
   }
 
@@ -137,7 +150,7 @@ export async function runSummary({ input, kind, audience, options, userId, emit,
     contentMd: content,
     provider: result.provider,
     model: result.model,
-    promptVersion: env.PROMPT_VERSION,
+    promptVersion,
     tokensIn: result.usage.input,
     tokensOut: result.usage.output,
     latencyMs: Date.now() - startedAt,
