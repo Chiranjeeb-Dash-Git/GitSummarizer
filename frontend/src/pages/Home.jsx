@@ -6,6 +6,7 @@ export default function Home() {
   const [inputVal, setInputVal] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [analysisKind, setAnalysisKind] = useState('overview');
+  const [audience, setAudience] = useState('learner');
   const termRef = useRef(null);
   const curRef = useRef(null);
 
@@ -141,7 +142,7 @@ export default function Home() {
       return;
     }
     setErrorMsg('');
-    navigate(`/read?input=${encodeURIComponent(val)}&kind=${analysisKind}&audience=learner`);
+    navigate(`/read?input=${encodeURIComponent(val)}&kind=${analysisKind}&audience=${audience}`);
   };
 
   return (
@@ -354,11 +355,65 @@ export default function Home() {
                 >
                   🔀 Commit Overview
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setAnalysisKind('commit')}
+                  className={`nb press lift rounded-full px-5 py-2 transition-colors ${
+                    analysisKind === 'commit'
+                      ? 'bg-[#FF5C3A] ring-2 ring-[#0A0A0A]'
+                      : 'bg-white hover:bg-[#FFF5DC]'
+                  }`}
+                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
+                >
+                  🛠️ One Commit
+                </button>
+              </div>
+              {/* AUDIENCE SELECTOR */}
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-sm font-bold text-[#0A0A0A]">
+                <span className="text-[#5B5B52]">Audience:</span>
+                <button
+                  type="button"
+                  onClick={() => setAudience('learner')}
+                  className={`nb press lift rounded-full px-5 py-2 text-[#0A0A0A] transition-colors ${
+                    audience === 'learner'
+                      ? 'bg-[#FFD60A] ring-2 ring-[#0A0A0A]'
+                      : 'bg-white hover:bg-[#FFF5DC]'
+                  }`}
+                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
+                >
+                  🎓 Learners
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAudience('product')}
+                  className={`nb press lift rounded-full px-5 py-2 text-[#0A0A0A] transition-colors ${
+                    audience === 'product'
+                      ? 'bg-[#FF9EC4] ring-2 ring-[#0A0A0A]'
+                      : 'bg-white hover:bg-[#FFF5DC]'
+                  }`}
+                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
+                >
+                  📦 Product teams
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAudience('maintainer')}
+                  className={`nb press lift rounded-full px-5 py-2 text-[#0A0A0A] transition-colors ${
+                    audience === 'maintainer'
+                      ? 'bg-[#B5F23D] ring-2 ring-[#0A0A0A]'
+                      : 'bg-white hover:bg-[#FFF5DC]'
+                  }`}
+                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
+                >
+                  🔧 Maintainers
+                </button>
               </div>
               <p className="mt-2 text-center text-xs font-medium text-[#5B5B52]">
                 {analysisKind === 'overview'
                   ? 'Reads README, structure & docs → clear project summary'
-                  : 'Parses recent commits & changes → structured changelog & release notes'}
+                  : analysisKind === 'release_notes'
+                  ? 'Parses recent commits & changes → structured changelog'
+                  : 'Deep-dive into a single commit — paste a /commit/<sha> URL'}
               </p>
             </div>
           </div>
