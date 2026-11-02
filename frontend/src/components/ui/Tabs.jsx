@@ -1,9 +1,10 @@
 import { useId, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { spring } from '../../lib/motion.js';
 import { cn } from '../../lib/cn.js';
 
 export default function Tabs({ tabs, value, onChange, label, className }) {
+  const reduceMotion = useReducedMotion();
   const id = useId();
   const refs = useRef([]);
 
@@ -35,7 +36,7 @@ export default function Tabs({ tabs, value, onChange, label, className }) {
             className={cn('relative h-12 font-display text-lg font-semibold', active ? 'text-ink' : 'text-muted hover:text-ink')}
           >
             {t.label}
-            {active && <motion.span layoutId={`${id}-underline`} transition={spring.snappy} className="absolute inset-x-0 -bottom-px h-[3px] bg-malachite" />}
+            {active && <motion.span layoutId={`${id}-underline`} transition={reduceMotion ? { duration: 0 } : spring.snappy} className="absolute inset-x-0 -bottom-px h-[3px] bg-malachite" />}
           </button>
         );
       })}

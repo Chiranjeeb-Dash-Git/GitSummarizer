@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { streamSummary } from '../lib/sse.js';
+import { streamSummary } from '../lib/sse.ts';
 import { ApiError } from '../lib/api.js';
 import { STAGES } from '../lib/constants.js';
 

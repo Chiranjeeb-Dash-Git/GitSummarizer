@@ -13,7 +13,7 @@ export default function ResultPanel({ repository, kind, audience, markdown, stre
   const audienceLabel = AUDIENCES.find((a) => a.value === audience)?.label;
 
   return (
-    <article className="mx-auto max-w-[1280px] px-5 pb-28 pt-10 md:px-10 xl:px-16">
+    <article className="motion-enter mx-auto max-w-[1280px] px-5 pb-28 pt-10 md:px-10 xl:px-16">
       {repository && (
         <header className="mb-8 flex flex-col gap-5 border-b border-line pb-8 sm:flex-row sm:items-start">
           <img src={repository.avatarUrl} alt="" width="56" height="56" className="h-14 w-14 rounded-full border border-line-strong" />

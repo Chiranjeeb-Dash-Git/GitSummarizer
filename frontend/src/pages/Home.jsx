@@ -1,234 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLandingMotion } from '../hooks/useLandingMotion.ts';
+import TerminalPreview from '../components/landing/TerminalPreview.tsx';
+import '../styles/home.css';
+import LandingAnalyzer from '../components/landing/LandingAnalyzer.tsx';
 
 export default function Home() {
-  const navigate = useNavigate();
-  const [inputVal, setInputVal] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  const [analysisKind, setAnalysisKind] = useState('overview');
-  const [audience, setAudience] = useState('learner');
-  const termRef = useRef(null);
-  const curRef = useRef(null);
-
-  // Cursor following sticker
-  useEffect(() => {
-    const rm = matchMedia('(prefers-reduced-motion:reduce)').matches;
-    const coarse = matchMedia('(pointer:coarse)').matches;
-    if (rm || coarse) return;
-
-    let tx = window.innerWidth / 2;
-    let ty = window.innerHeight / 2;
-    let cx = tx;
-    let cy = ty;
-    let raf;
-
-    const onPointerMove = (e) => {
-      tx = e.clientX;
-      ty = e.clientY;
-    };
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-
-    const loop = () => {
-      cx += (tx - cx) * 0.12;
-      cy += (ty - cy) * 0.12;
-      if (curRef.current) {
-        curRef.current.style.transform = `translate(${cx - 30}px, ${cy - 30}px)`;
-      }
-      raf = requestAnimationFrame(loop);
-    };
-    loop();
-
-    return () => {
-      window.removeEventListener('pointermove', onPointerMove);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  // Reveals intersection observer
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      (es) =>
-        es.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            io.unobserve(e.target);
-          }
-        }),
-      { threshold: 0.15 },
-    );
-    document.querySelectorAll('.gv-reveal').forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-
-  // Parallax shapes
-  useEffect(() => {
-    const rm = matchMedia('(prefers-reduced-motion:reduce)').matches;
-    if (rm) return;
-    const px = document.querySelectorAll('[data-speed]');
-    let tick = false;
-
-    const onScroll = () => {
-      if (tick) return;
-      tick = true;
-      requestAnimationFrame(() => {
-        px.forEach((el) => {
-          const speed = parseFloat(el.getAttribute('data-speed') || '0');
-          el.style.transform = `translate3d(0, ${window.scrollY * speed}px, 0)`;
-        });
-        tick = false;
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  // Terminal animated type-in on view
-  useEffect(() => {
-    const term = termRef.current;
-    if (!term) return;
-
-    const L = [
-      '<span style="color:#FF5C3A">$</span> gitvision read github.com/acme/atlas --for maintainers',
-      '<span style="color:#12B76A">✓</span> <span style="color:rgba(255,245,220,0.7)">resolved acme/atlas (TypeScript, 12.4k stars)</span>',
-      '<span style="color:#12B76A">✓</span> <span style="color:rgba(255,245,220,0.7)">read README, 38 top-level files, 120 commits</span>',
-      '',
-      '{',
-      '  <span style="color:#FFD60A">"summary"</span>: <span style="color:#B5F23D">"A multi-tenant billing engine with a ledger core."</span>,',
-      '  <span style="color:#FFD60A">"modules"</span>: [<span style="color:#B5F23D">"ledger"</span>, <span style="color:#B5F23D">"invoicing"</span>, <span style="color:#B5F23D">"webhooks"</span>],',
-      '  <span style="color:#FFD60A">"hotspots"</span>: <span style="color:#FF9EC4">3</span>, <span style="color:rgba(255,245,220,0.6)">// all inside /ledger</span>',
-      '  <span style="color:#FFD60A">"risk"</span>: <span style="color:#B5F23D">"low"</span>',
-      '}',
-      '',
-      '<span style="color:#FF5C3A">→</span> release notes ready in <span style="color:#FFD60A">2.8s</span> <span class="gv-blink inline-block h-4 w-2 bg-[#FFD60A] align-[-2px]"></span>',
-    ];
-
-    let started = false;
-    const rm = matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-    function type() {
-      let i = 0;
-      function next() {
-        if (!term) return;
-        term.innerHTML = L.slice(0, i + 1)
-          .map((l) => `<div class="gv-tl in">${l || '&nbsp;'}</div>`)
-          .join('');
-        if (++i < L.length) setTimeout(next, rm ? 0 : 380);
-      }
-      next();
-    }
-
-    const obs = new IntersectionObserver(
-      ([e], o) => {
-        if (e.isIntersecting && !started) {
-          started = true;
-          type();
-          o.disconnect();
-        }
-      },
-      { threshold: 0.4 },
-    );
-    obs.observe(term);
-    return () => obs.disconnect();
-  }, []);
-
-  const handleAnalyze = (e) => {
-    e?.preventDefault();
-    const val = inputVal.trim();
-    const m = val.match(
-      /^(?:https?:\/\/)?(?:www\.)?(?:github\.com\/)?([\w.-]+)\/([\w.-]+?)(?:\.git)?(?:[\/?#].*)?$/i,
-    );
-    if (!m) {
-      setErrorMsg('Enter a GitHub link such as github.com/owner/repo.');
-      return;
-    }
-    setErrorMsg('');
-    navigate(`/read?input=${encodeURIComponent(val)}&kind=${analysisKind}&audience=${audience}`);
-  };
+  const cursorRef = useLandingMotion();
 
   return (
     <div className="gitvision-root relative min-h-screen font-sans selection:bg-[#0A0A0A] selection:text-[#FFD60A]">
-      <style>{`
-        .gitvision-root {
-          background-color: #FFF5DC;
-          background-image: radial-gradient(rgba(10,10,10,.16) 1.3px, transparent 1.3px);
-          background-size: 22px 22px;
-          color: #0A0A0A;
-          font-family: 'Space Grotesk', system-ui, sans-serif;
-          overflow-x: hidden;
-        }
-        .gitvision-root .nb {
-          border: 3px solid #0A0A0A;
-          border-radius: 12px;
-          box-shadow: 6px 6px 0 #0A0A0A;
-        }
-        .gitvision-root .lift {
-          transition: transform .18s cubic-bezier(.3,1.6,.5,1), box-shadow .18s;
-        }
-        .gitvision-root .lift:hover {
-          transform: translate(-4px,-4px);
-          box-shadow: 10px 10px 0 #0A0A0A;
-        }
-        .gitvision-root .press:active {
-          transform: translate(5px,5px);
-          box-shadow: 1px 1px 0 #0A0A0A;
-        }
-        .gitvision-root .hl {
-          background: #FFD60A;
-          padding: 0 .18em;
-          box-decoration-break: clone;
-          -webkit-box-decoration-break: clone;
-          border-radius: 6px;
-        }
-        .gitvision-root .gv-shape {
-          position: absolute;
-          pointer-events: none;
-        }
-        .gitvision-root .gv-reveal {
-          opacity: 0;
-          transform: translateY(34px) rotate(var(--r,0deg));
-          transition: opacity .5s, transform .6s cubic-bezier(.3,1.5,.5,1);
-          transition-delay: var(--d,0s);
-        }
-        .gitvision-root .gv-reveal.in {
-          opacity: 1;
-          transform: rotate(var(--r,0deg));
-        }
-        .gitvision-root .marq {
-          display: flex;
-          width: max-content;
-          animation: gv-marq 24s linear infinite;
-        }
-        @keyframes gv-marq { to { transform: translateX(-50%); } }
-        .gitvision-root .gv-blink {
-          animation: gv-blink 1.1s steps(2) infinite;
-        }
-        @keyframes gv-blink { 50% { opacity: .2; } }
-        .gitvision-root .gv-spin {
-          animation: gv-spin 14s linear infinite;
-        }
-        @keyframes gv-spin { to { transform: rotate(360deg); } }
-        .gitvision-root .dash {
-          stroke-dasharray: 6 7;
-          animation: gv-dash 1s linear infinite;
-        }
-        @keyframes gv-dash { to { stroke-dashoffset: -26; } }
-        .gitvision-root .gv-tl { opacity: 0; transition: opacity .2s; }
-        .gitvision-root .gv-tl.in { opacity: 1; }
-        @media(prefers-reduced-motion:reduce){
-          .gitvision-root * { animation: none!important; transition: none!important; }
-          .gitvision-root .gv-reveal, .gitvision-root .gv-tl { opacity: 1; }
-        }
-      `}</style>
 
-      {/* Cursor Sticker */}
       <div
-        ref={curRef}
+        ref={cursorRef}
         aria-hidden="true"
         className="pointer-events-none fixed left-0 top-0 z-50 hidden h-[60px] w-[60px] rounded-full border-[3px] border-[#0A0A0A] bg-[#FFD60A] opacity-90 md:block"
         style={{ transform: 'translate(-100px, -100px)' }}
       />
 
-      {/* HEADER NAVBAR */}
       <header className="sticky z-50 px-3 pt-3" style={{ top: 'env(safe-area-inset-top, 0px)' }}>
         <nav className="nb mx-auto flex max-w-6xl items-center justify-between bg-white px-4 py-3" aria-label="Main">
           <a href="#top" className="flex items-center gap-2.5 font-['Archivo_Black'] text-xl text-[#0A0A0A] sm:text-2xl">
@@ -250,7 +37,7 @@ export default function Home() {
       </header>
 
       <main id="top" className="relative z-10">
-        {/* HERO SECTION */}
+
         <section className="relative mx-auto max-w-6xl px-5 pb-20 pt-14 sm:pt-20">
           <svg
             className="gv-shape gv-spin left-0 top-6 hidden w-24 sm:block"
@@ -298,128 +85,10 @@ export default function Home() {
               Paste a GitHub link. GitVision AI reads the code, the history and the docs, then hands you a clear overview and release notes in seconds.
             </p>
 
-            <div id="analyze" className="gv-reveal mx-auto mt-11 max-w-3xl" style={{ '--d': '.24s' }}>
-              <form
-                onSubmit={handleAnalyze}
-                className="nb flex flex-col gap-3 bg-white p-3 sm:flex-row"
-                style={{ boxShadow: '8px 8px 0 #0A0A0A' }}
-                noValidate
-              >
-                <label htmlFor="u" className="sr-only">GitHub repository URL</label>
-                <input
-                  id="u"
-                  value={inputVal}
-                  onChange={(e) => setInputVal(e.target.value)}
-                  autoComplete="off"
-                  spellCheck={false}
-                  placeholder="github.com/vercel/next.js"
-                  className="min-w-0 flex-1 rounded-lg border-[3px] border-[#0A0A0A] bg-[#FFF5DC] px-4 py-3.5 font-mono text-sm font-bold text-[#0A0A0A] placeholder:text-[#5B5B52] focus:bg-[#FFD60A] focus:outline-none sm:text-base"
-                />
-                <button
-                  id="go"
-                  type="submit"
-                  className="nb press lift rounded-lg bg-[#FF5C3A] px-8 py-3.5 font-['Archivo_Black'] text-lg text-[#0A0A0A]"
-                  style={{ boxShadow: '4px 4px 0 #0A0A0A' }}
-                >
-                  Analyze
-                </button>
-              </form>
-              {errorMsg && (
-                <p id="err" className="mt-3 min-h-[1.5rem] font-bold text-[#FF5C3A]" role="alert">
-                  {errorMsg}
-                </p>
-              )}
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-sm font-bold text-[#0A0A0A]">
-                <span className="text-[#5B5B52]">Mode:</span>
-                <button
-                  type="button"
-                  onClick={() => setAnalysisKind('overview')}
-                  className={`nb press lift rounded-full px-5 py-2 transition-colors ${
-                    analysisKind === 'overview'
-                      ? 'bg-[#FFD60A] ring-2 ring-[#0A0A0A]'
-                      : 'bg-white hover:bg-[#FFF5DC]'
-                  }`}
-                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
-                >
-                  📄 Project Summary
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAnalysisKind('release_notes')}
-                  className={`nb press lift rounded-full px-5 py-2 transition-colors ${
-                    analysisKind === 'release_notes'
-                      ? 'bg-[#B5F23D] ring-2 ring-[#0A0A0A]'
-                      : 'bg-white hover:bg-[#FFF5DC]'
-                  }`}
-                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
-                >
-                  🔀 Commit Overview
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAnalysisKind('commit')}
-                  className={`nb press lift rounded-full px-5 py-2 transition-colors ${
-                    analysisKind === 'commit'
-                      ? 'bg-[#FF5C3A] ring-2 ring-[#0A0A0A]'
-                      : 'bg-white hover:bg-[#FFF5DC]'
-                  }`}
-                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
-                >
-                  🛠️ One Commit
-                </button>
-              </div>
-              {/* AUDIENCE SELECTOR */}
-              <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-sm font-bold text-[#0A0A0A]">
-                <span className="text-[#5B5B52]">Audience:</span>
-                <button
-                  type="button"
-                  onClick={() => setAudience('learner')}
-                  className={`nb press lift rounded-full px-5 py-2 text-[#0A0A0A] transition-colors ${
-                    audience === 'learner'
-                      ? 'bg-[#FFD60A] ring-2 ring-[#0A0A0A]'
-                      : 'bg-white hover:bg-[#FFF5DC]'
-                  }`}
-                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
-                >
-                  🎓 Learners
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAudience('product')}
-                  className={`nb press lift rounded-full px-5 py-2 text-[#0A0A0A] transition-colors ${
-                    audience === 'product'
-                      ? 'bg-[#FF9EC4] ring-2 ring-[#0A0A0A]'
-                      : 'bg-white hover:bg-[#FFF5DC]'
-                  }`}
-                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
-                >
-                  📦 Product teams
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAudience('maintainer')}
-                  className={`nb press lift rounded-full px-5 py-2 text-[#0A0A0A] transition-colors ${
-                    audience === 'maintainer'
-                      ? 'bg-[#B5F23D] ring-2 ring-[#0A0A0A]'
-                      : 'bg-white hover:bg-[#FFF5DC]'
-                  }`}
-                  style={{ boxShadow: '3px 3px 0 #0A0A0A' }}
-                >
-                  🔧 Maintainers
-                </button>
-              </div>
-              <p className="mt-2 text-center text-xs font-medium text-[#5B5B52]">
-                {analysisKind === 'overview'
-                  ? 'Reads README, structure & docs → clear project summary'
-                  : analysisKind === 'release_notes'
-                  ? 'Parses recent commits & changes → structured changelog'
-                  : 'Deep-dive into a single commit — paste a /commit/<sha> URL'}
-              </p>
-            </div>
+            <LandingAnalyzer />
           </div>
         </section>
 
-        {/* MARQUEE */}
         <div className="-rotate-1 overflow-hidden border-y-[3px] border-[#0A0A0A] bg-[#0A0A0A] py-4 text-[#FFD60A]" aria-hidden="true">
           <div className="marq font-['Archivo_Black'] text-2xl sm:text-3xl">
             <span className="whitespace-nowrap px-6">README SUMMARIES ✶ RELEASE NOTES ✶ ARCHITECTURE MAPS ✶ COMMIT TRANSLATIONS ✶ PLAIN LANGUAGE ✶ </span>
@@ -427,7 +96,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* BENTO */}
         <section id="features" className="mx-auto max-w-6xl px-5 py-24 text-[#0A0A0A]">
           <div className="gv-reveal max-w-3xl">
             <h2 className="font-['Archivo_Black'] text-4xl leading-[1.05] sm:text-6xl">Big brains. <span className="hl">Zero jargon.</span></h2>
@@ -471,7 +139,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* TERMINAL */}
         <section id="preview" className="mx-auto max-w-5xl px-5 py-20 text-[#0A0A0A]">
           <div className="gv-reveal mb-10 text-center">
             <h2 className="font-['Archivo_Black'] text-4xl sm:text-6xl">Watch it <span className="hl">read.</span></h2>
@@ -484,11 +151,10 @@ export default function Home() {
               <i className="h-4 w-4 rounded-full border-[3px] border-[#0A0A0A] bg-[#12B76A] inline-block" />
               <span className="ml-3 font-mono text-xs font-bold text-[#0A0A0A]">gitvision: acme/atlas</span>
             </div>
-            <pre ref={termRef} className="min-h-[22rem] overflow-x-auto p-5 font-mono text-[13px] leading-7 text-[#FFF5DC] sm:p-7 sm:text-sm whitespace-pre font-bold" aria-label="Terminal output sample" />
+            <TerminalPreview />
           </div>
         </section>
 
-        {/* PROOF */}
         <section id="proof" className="mx-auto max-w-6xl px-5 py-24 text-[#0A0A0A]">
           <h2 className="gv-reveal max-w-2xl font-['Archivo_Black'] text-4xl leading-[1.05] sm:text-6xl">Hours back, <span className="hl">every week.</span></h2>
           <div className="mt-12 grid gap-7 md:grid-cols-3">
@@ -515,7 +181,6 @@ export default function Home() {
         </section>
       </main>
 
-      {/* FOOTER */}
       <footer className="relative z-10 border-t-[3px] border-[#0A0A0A] bg-[#0A0A0A] px-5 py-12 text-[#FFF5DC]">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
           <div>

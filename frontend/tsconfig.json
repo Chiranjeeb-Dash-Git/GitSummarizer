@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "types": ["vite/client"]
+  },
+  "include": ["src/lib/sse.ts", "src/hooks/useLandingMotion.ts", "src/components/landing/TerminalPreview.tsx", "src/components/landing/LandingAnalyzer.tsx"]
+}

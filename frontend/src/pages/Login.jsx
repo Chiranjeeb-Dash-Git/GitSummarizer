@@ -24,7 +24,7 @@ export default function Login() {
   const fieldError = (name) => err?.details?.[name]?.[0];
 
   return (
-    <div className="mx-auto grid min-h-[78vh] max-w-[1280px] lg:grid-cols-2">
+    <div className="motion-enter mx-auto grid min-h-[78vh] max-w-[1280px] lg:grid-cols-2">
       <div className="flex items-center px-5 py-14 md:px-10 xl:px-16">
         <form onSubmit={submit} className="w-full max-w-md" noValidate>
           <h1 className="font-display text-h1 font-extrabold">Sign in</h1>

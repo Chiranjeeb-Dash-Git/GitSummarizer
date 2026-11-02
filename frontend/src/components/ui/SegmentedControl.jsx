@@ -1,9 +1,10 @@
 import { useId } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { spring } from '../../lib/motion.js';
 import { cn } from '../../lib/cn.js';
 
 export default function SegmentedControl({ label, options, value, onChange, className }) {
+  const reduceMotion = useReducedMotion();
   const group = useId();
   return (
     <div role="radiogroup" aria-label={label} className={cn('inline-flex rounded-pill border border-line-strong bg-surface p-1', className)}>
@@ -13,7 +14,7 @@ export default function SegmentedControl({ label, options, value, onChange, clas
           <label key={o.value} className="relative cursor-pointer">
             <input type="radio" name={group} value={o.value} checked={active} onChange={() => onChange(o.value)} className="peer sr-only" />
             {active && (
-              <motion.span layoutId={`${group}-thumb`} transition={spring.snappy} className="absolute inset-0 rounded-pill bg-ink" />
+              <motion.span layoutId={`${group}-thumb`} transition={reduceMotion ? { duration: 0 } : spring.snappy} className="absolute inset-0 rounded-pill bg-ink" />
             )}
             <span
               title={o.hint}
