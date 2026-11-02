@@ -1,20 +1,17 @@
 import { Resend } from 'resend';
 import { env } from '../config/env.js';
 import { logger } from '../config/logger.js';
-
-let resendClient = null;
-
-function getClient() {
-  if (!resendClient && env.RESEND_API_KEY) {
-    resendClient = new Resend(env.RESEND_API_KEY);
-  }
-  return resendClient;
-}
+import { AppError } from '../utils/AppError.js';
 
 export async function sendVerificationOtp({ email, code, displayName }) {
-  const client = getClient();
+  logger.info({ email, code }, `[OTP Code Generated]: ${code} for ${email}`);
+
+  if (!env.RESEND_API_KEY) {
+    throw new AppError(503, 'EMAIL_UNAVAILABLE', 'Email verification is not configured. Please try again later.');
+  }
+
+  const resend = new Resend(env.RESEND_API_KEY);
   const subject = `Your GitSummarizer Verification Code: ${code}`;
-  
   const html = `
     <!DOCTYPE html>
     <html>
@@ -47,28 +44,25 @@ export async function sendVerificationOtp({ email, code, displayName }) {
     </html>
   `;
 
-  logger.info({ email, code }, `[OTP Code Generated]: ${code} for ${email}`);
-
-  if (!client) {
-    logger.warn('[Resend] RESEND_API_KEY not configured.');
-    return { success: true, simulated: true };
-  }
-
+  let result;
   try {
-    const res = await client.emails.send({
-      from: 'GitSummarizer <onboarding@resend.dev>',
+    result = await resend.emails.send({
+      from: env.EMAIL_FROM || 'GitSummarizer <onboarding@resend.dev>',
       to: email,
       subject,
       html,
-    });
-    if (res.error) {
-      logger.warn({ error: res.error, email }, '[Resend Warning] Direct delivery blocked or failed.');
-      return { success: false, error: res.error.message, resendBlocked: true };
-    }
-    logger.info({ id: res.data?.id, email }, 'Verification email dispatched via Resend');
-    return { success: true, id: res.data?.id };
+      text: `Your verification code is ${code}. It expires in 10 minutes.`,
+    }, { signal: AbortSignal.timeout(15_000) });
   } catch (err) {
     logger.warn({ err: err.message, email }, '[Resend] Delivery exception.');
-    return { success: false, error: err.message, resendBlocked: true };
+    throw new AppError(502, 'EMAIL_UNAVAILABLE', 'Could not send the verification email. Please try again later.');
   }
+
+  if (result?.error) {
+    logger.warn({ error: result.error, email }, '[Resend Warning] Direct delivery blocked or failed.');
+    throw new AppError(502, 'EMAIL_UNAVAILABLE', 'Could not send the verification email. Please try again later.');
+  }
+
+  logger.info({ id: result?.data?.id, email }, 'Verification email dispatched via Resend');
+  return { success: true, id: result?.data?.id };
 }
