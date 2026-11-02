@@ -22,6 +22,7 @@ r.post('/auth/login', authLimiter, validate(s.loginSchema), auth.login);
 r.post('/auth/logout', auth.logout);
 r.get('/auth/me', auth.me);
 
+r.get('/repos/details', validate(s.previewQuerySchema, 'query'), repos.details);
 r.get('/repos/preview', validate(s.previewQuerySchema, 'query'), repos.preview);
 
 r.post(

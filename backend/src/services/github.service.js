@@ -63,6 +63,8 @@ const mapRepo = (r) => ({
   avatarUrl: r.owner.avatar_url,
   stars: r.stargazers_count,
   forks: r.forks_count,
+  openIssues: r.open_issues_count,
+  subscribersCount: r.subscribers_count ?? 0,
   language: r.language,
   topics: r.topics ?? [],
   defaultBranch: r.default_branch,
@@ -148,3 +150,59 @@ export async function compareRefs(owner, repo, base, head) {
   };
 }
 
+
+
+export async function getContributors(owner, repo) {
+  const list = await gh(`/repos/${owner}/${repo}/contributors?per_page=30`, { allow404: true });
+  return Array.isArray(list) ? list.map((u) => ({ login: u.login, contributions: u.contributions, avatarUrl: u.avatar_url })) : [];
+}
+
+export async function getReleases(owner, repo) {
+  const list = await gh(`/repos/${owner}/${repo}/releases?per_page=15`, { allow404: true });
+  return Array.isArray(list)
+    ? list.map((rel) => ({
+        id: rel.id,
+        tag: rel.tag_name,
+        name: rel.name || rel.tag_name,
+        body: rel.body || '',
+        publishedAt: rel.published_at,
+        author: rel.author?.login || 'maintainer',
+        htmlUrl: rel.html_url,
+      }))
+    : [];
+}
+
+export async function getPullRequests(owner, repo) {
+  const list = await gh(`/repos/${owner}/${repo}/pulls?state=all&per_page=15`, { allow404: true });
+  return Array.isArray(list)
+    ? list.map((pr) => ({
+        id: pr.id,
+        number: pr.number,
+        title: pr.title,
+        state: pr.state,
+        mergedAt: pr.merged_at,
+        createdAt: pr.created_at,
+        author: pr.user?.login || 'unknown',
+        htmlUrl: pr.html_url,
+      }))
+    : [];
+}
+
+export async function getPackageJson(owner, repo, ref) {
+  const raw = await gh(`/repos/${owner}/${repo}/contents/package.json${ref ? `?ref=${encodeURIComponent(ref)}` : ''}`, {
+    accept: 'application/vnd.github.raw+json',
+    raw: true,
+    allow404: true,
+  });
+  if (!raw) return null;
+  try {
+    return typeof raw === 'string' ? JSON.parse(raw) : raw;
+  } catch {
+    return null;
+  }
+}
+
+export async function getCommitActivity(owner, repo) {
+  const list = await gh(`/repos/${owner}/${repo}/stats/commit_activity`, { allow404: true });
+  return Array.isArray(list) ? list : [];
+}

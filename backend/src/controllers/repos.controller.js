@@ -26,3 +26,52 @@ export const preview = asyncHandler(async (req, res) => {
   });
 });
 
+
+
+export const details = asyncHandler(async (req, res) => {
+  let parsed;
+  try {
+    parsed = parseGitHubInput(req.validatedQuery.input);
+  } catch (err) {
+    if (err instanceof InvalidGitHubUrlError) throw new AppError(400, 'INVALID_URL', err.message);
+    throw err;
+  }
+
+  const { owner, repo } = parsed;
+
+  const [
+    repository,
+    languages,
+    contributors,
+    releases,
+    commits,
+    pullRequests,
+    rootEntries,
+    packageJson,
+    commitActivity,
+  ] = await Promise.all([
+    github.getRepository(owner, repo),
+    github.getLanguages(owner, repo),
+    github.getContributors(owner, repo),
+    github.getReleases(owner, repo),
+    github.listCommits(owner, repo, { limit: 30 }),
+    github.getPullRequests(owner, repo),
+    github.getRootEntries(owner, repo),
+    github.getPackageJson(owner, repo),
+    github.getCommitActivity(owner, repo),
+  ]);
+
+  res.json({
+    data: {
+      repository,
+      languages,
+      contributors,
+      releases,
+      commits,
+      pullRequests,
+      rootEntries,
+      packageJson,
+      commitActivity,
+    },
+  });
+});
