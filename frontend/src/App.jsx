@@ -22,13 +22,15 @@ const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 export default function App() {
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const isRead = location.pathname === '/read' || location.pathname.startsWith('/r/');
+  const isCustomBrutalTheme = isHome || isRead;
 
   return (
     <SmoothScroll>
       <a href="#main" className="skip-link">Skip to content</a>
-      {!isHome && <GrainOverlay />}
-      {!isHome && <Navbar />}
-      <main id="main" tabIndex={-1} className="min-h-[70vh] outline-none">
+      {!isCustomBrutalTheme && <GrainOverlay />}
+      {!isCustomBrutalTheme && <Navbar />}
+      <main id="main" tabIndex={-1} className={isCustomBrutalTheme ? "outline-none" : "min-h-[70vh] outline-none"}>
         <ScrollToTop />
         <Suspense fallback={<RouteFallback />}>
           <Routes>
@@ -42,7 +44,7 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      {!isHome && <Footer />}
+      {!isCustomBrutalTheme && <Footer />}
       <StrataWipe />
       <ToastHost />
       <CommandPalette />
