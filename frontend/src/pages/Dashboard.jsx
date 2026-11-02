@@ -25,7 +25,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="mx-auto max-w-[1280px] px-5 py-12 md:px-10 xl:px-16">
+    <div className="motion-enter mx-auto max-w-[1280px] px-5 py-12 md:px-10 xl:px-16">
       <h1 className="font-display text-h1 font-extrabold tracking-tight">Your library</h1>
 
       <div className="mt-4">
@@ -41,7 +41,9 @@ export default function Dashboard() {
         />
       </div>
 
-      {currentTab === 'history' ? <HistoryList /> : <SavedList />}
+      <div key={currentTab} className="motion-enter">
+        {currentTab === 'history' ? <HistoryList /> : <SavedList />}
+      </div>
     </div>
   );
 }

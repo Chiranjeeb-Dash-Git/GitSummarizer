@@ -93,7 +93,7 @@ export default function Navbar() {
                 {user.displayName ? user.displayName[0] : 'U'}
               </button>
               {userDropdown && (
-                <div className="absolute right-0 top-12 z-50 w-44 rounded-field border border-line-strong bg-surface p-1.5 shadow-stack">
+                <div className="motion-enter absolute right-0 top-12 z-50 w-44 rounded-field border border-line-strong bg-surface p-1.5 shadow-stack">
                   <WipeLink
                     to="/dashboard"
                     onClick={() => setUserDropdown(false)}
@@ -137,7 +137,7 @@ export default function Navbar() {
 
       {/* Mobile sheet */}
       {menuOpen && (
-        <div className="absolute left-0 top-full z-50 w-full border-b border-line-strong bg-paper p-5 shadow-stack md:hidden">
+        <div className="motion-enter absolute left-0 top-full z-50 w-full border-b border-line-strong bg-paper p-5 shadow-stack md:hidden">
           <div className="flex flex-col gap-2">
             <a
               href="/#samples"

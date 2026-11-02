@@ -87,7 +87,7 @@ export default function Register() {
   };
 
   return (
-    <div className="mx-auto grid min-h-[78vh] max-w-[1280px] lg:grid-cols-2">
+    <div className="motion-enter mx-auto grid min-h-[78vh] max-w-[1280px] lg:grid-cols-2">
       <div className="flex items-center px-5 py-14 md:px-10 xl:px-16">
         {step === 'form' ? (
           <form onSubmit={submitRegister} className="w-full max-w-md" noValidate>

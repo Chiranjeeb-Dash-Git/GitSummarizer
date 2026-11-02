@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import { cn } from '../../lib/cn.js';
 
 const base =
-  'inline-flex items-center justify-center gap-2 font-semibold select-none whitespace-nowrap transition-[transform,box-shadow,background-color,color] duration-150 ease-out-expo disabled:opacity-45 disabled:pointer-events-none';
+  'inline-flex items-center justify-center gap-2 font-semibold select-none whitespace-nowrap transition-[transform,scale,box-shadow,background-color,color] duration-150 ease-out-expo disabled:opacity-45 disabled:pointer-events-none';
 
 const variants = {
   primary:
