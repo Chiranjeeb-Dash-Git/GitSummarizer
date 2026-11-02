@@ -37,7 +37,7 @@ export default function Read() {
 
   if (state.status === 'error') {
     return (
-      <div className="motion-enter mx-auto max-w-[1280px] px-5 py-16 md:px-10 xl:px-16">
+      <div className="w-full">
         <ErrorPanel error={state.error} onRetry={() => start({ input, kind, audience, options: { limit: 30 } })} />
       </div>
     );
@@ -46,7 +46,7 @@ export default function Read() {
   const waiting = state.status === 'idle' || (state.status === 'running' && !state.text);
   if (waiting) {
     return (
-      <div className="motion-enter mx-auto max-w-[1280px] px-5 py-16 md:px-10 xl:px-16">
+      <div className="w-full">
         <DrillLoader stages={state.stages} repository={state.repository} cached={state.cached} />
       </div>
     );

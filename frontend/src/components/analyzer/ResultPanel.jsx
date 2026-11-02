@@ -118,7 +118,7 @@ export default function ResultPanel({
             setActiveSection(id);
           }
         },
-        { rootMargin: '-30% 0px -60% 0px' }
+        { rootMargin: '-20% 0px -60% 0px' }
       );
       obs.observe(el);
       observers.push(obs);
@@ -201,6 +201,16 @@ export default function ResultPanel({
     navigate(`/read?input=${encodeURIComponent(repoFullName)}&kind=${kind}&audience=${aud}`);
   };
 
+  const scrollToSection = (e, id) => {
+    e.preventDefault();
+    setActiveSection(id);
+    const target = document.getElementById(id);
+    if (target) {
+      const topOffset = target.getBoundingClientRect().top + window.pageYOffset - 110;
+      window.scrollTo({ top: topOffset, behavior: 'smooth' });
+    }
+  };
+
   const handleNewAnalysis = (e) => {
     e.preventDefault();
     const val = newRepoInput.trim();
@@ -215,7 +225,7 @@ export default function ResultPanel({
     navigate(`/read?input=${encodeURIComponent(val)}&kind=${kind}&audience=${selectedAud}`);
   };
 
-  // Architecture modules inferred or defaulted
+  // Architecture modules
   const modules = [
     { n: 'core', d: 'The engine. Owns the public API, core pipeline, and shared types.', files: 24, commits: 88 },
     { n: 'router', d: 'Maps requests to handlers and resolves routes & parameters.', files: 12, commits: 45 },
@@ -224,7 +234,7 @@ export default function ResultPanel({
     { n: 'cache', d: 'High-speed caching layer to reuse summaries and avoid repeat latency.', files: 7, commits: 19 },
   ];
 
-  // Release notes extraction from markdown if present, or formatted defaults
+  // Release notes
   const sampleNotes = [
     { t: 'New', x: 'Streaming real-time generation via server-sent events', sha: 'a3f9c21' },
     { t: 'Improved', x: 'Optimized AST context truncation for massive repositories', sha: 'b71e0d4' },
@@ -238,7 +248,7 @@ export default function ResultPanel({
 
   // Section rail positioning
   const railIndexMap = { sum: 0, hi: 1, arch: 2, rel: 3, act: 4 };
-  const activeRailOffset = (railIndexMap[activeSection] || 0) * 48;
+  const activeRailOffset = (railIndexMap[activeSection] ?? 0) * 48;
 
   // Diagram coordinates
   const P = [
@@ -305,21 +315,6 @@ export default function ResultPanel({
           border-right: 3px solid #0A0A0A;
           z-index: 80;
         }
-        .band {
-          position: fixed;
-          top: 0;
-          bottom: 0;
-          width: 20.1%;
-          z-index: 200;
-          transform: translateY(-101%);
-          pointer-events: none;
-          border-right: 3px solid #0A0A0A;
-        }
-        .go .band {
-          animation: gv-wipe 1.1s cubic-bezier(.76,0,.24,1) both;
-          animation-delay: calc(var(--i)*.08s);
-        }
-        @keyframes gv-wipe { 0% { transform: translateY(0); } 100% { transform: translateY(101%); } }
         .stamp {
           opacity: 1;
           transform: rotate(-6deg);
@@ -382,6 +377,58 @@ export default function ResultPanel({
           animation: gv-blink 1.1s steps(2) infinite;
         }
         @keyframes gv-blink { 50% { opacity: .2; } }
+
+        /* Neobrutalist high-contrast readable inline code and commit badge styling */
+        .gitvision-result-root .md :not(pre) > code,
+        .gitvision-result-root code:not(pre code) {
+          background-color: #FFD60A !important;
+          color: #0A0A0A !important;
+          border: 2px solid #0A0A0A !important;
+          font-weight: 700 !important;
+          font-family: 'Space Mono', monospace !important;
+          padding: 0.15em 0.5em !important;
+          border-radius: 6px !important;
+          box-shadow: 2px 2px 0 #0A0A0A !important;
+          display: inline-block !important;
+          line-height: 1.2 !important;
+        }
+
+        .gitvision-result-root .md a code {
+          background-color: #B5F23D !important;
+          color: #0A0A0A !important;
+        }
+
+        .gitvision-result-root .md pre {
+          background-color: #0A0A0A !important;
+          color: #FFF5DC !important;
+          border: 3px solid #0A0A0A !important;
+          border-radius: 10px !important;
+          box-shadow: 6px 6px 0 #0A0A0A !important;
+          padding: 1.2rem !important;
+        }
+
+        .gitvision-result-root .md pre code {
+          background: transparent !important;
+          color: #FFF5DC !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
+
+        .gitvision-result-root .md p,
+        .gitvision-result-root .md li,
+        .gitvision-result-root .md h1,
+        .gitvision-result-root .md h2,
+        .gitvision-result-root .md h3 {
+          color: #0A0A0A !important;
+        }
+
+        .gitvision-result-root .md ul > li::before {
+          background: #FF5C3A !important;
+          border-radius: 50% !important;
+          width: 8px !important;
+          height: 8px !important;
+        }
       `}</style>
 
       {/* Floating cursor sticker & progress line */}
@@ -571,55 +618,57 @@ export default function ResultPanel({
           <aside className="hidden lg:block">
             <nav className="sticky top-28" aria-label="Sections">
               <ul className="relative space-y-1" id="rail">
+                {/* Active Indicator Backdrop */}
                 <span
                   id="ind"
-                  className="absolute left-0 top-0 h-11 w-full rounded-lg border-[3px] border-[#0A0A0A] bg-[#FFD60A] transition-transform duration-300"
+                  className="pointer-events-none absolute left-0 top-0 h-11 w-full rounded-lg border-[3px] border-[#0A0A0A] bg-[#FFD60A] transition-transform duration-200"
                   style={{
                     boxShadow: '3px 3px 0 #0A0A0A',
                     transform: `translateY(${activeRailOffset}px)`,
+                    zIndex: 0,
                   }}
                 />
-                <li>
+                <li className="relative z-10">
                   <a
-                    className="relative flex h-11 items-center px-4 font-bold text-[#0A0A0A]"
+                    className="flex h-11 items-center px-4 font-bold text-[#0A0A0A] hover:opacity-80 transition-opacity"
                     href="#sum"
-                    onClick={() => setActiveSection('sum')}
+                    onClick={(e) => scrollToSection(e, 'sum')}
                   >
                     Overview
                   </a>
                 </li>
-                <li>
+                <li className="relative z-10">
                   <a
-                    className="relative flex h-11 items-center px-4 font-bold text-[#0A0A0A]"
+                    className="flex h-11 items-center px-4 font-bold text-[#0A0A0A] hover:opacity-80 transition-opacity"
                     href="#hi"
-                    onClick={() => setActiveSection('hi')}
+                    onClick={(e) => scrollToSection(e, 'hi')}
                   >
                     Highlights
                   </a>
                 </li>
-                <li>
+                <li className="relative z-10">
                   <a
-                    className="relative flex h-11 items-center px-4 font-bold text-[#0A0A0A]"
+                    className="flex h-11 items-center px-4 font-bold text-[#0A0A0A] hover:opacity-80 transition-opacity"
                     href="#arch"
-                    onClick={() => setActiveSection('arch')}
+                    onClick={(e) => scrollToSection(e, 'arch')}
                   >
                     Architecture
                   </a>
                 </li>
-                <li>
+                <li className="relative z-10">
                   <a
-                    className="relative flex h-11 items-center px-4 font-bold text-[#0A0A0A]"
+                    className="flex h-11 items-center px-4 font-bold text-[#0A0A0A] hover:opacity-80 transition-opacity"
                     href="#rel"
-                    onClick={() => setActiveSection('rel')}
+                    onClick={(e) => scrollToSection(e, 'rel')}
                   >
                     Release notes
                   </a>
                 </li>
-                <li>
+                <li className="relative z-10">
                   <a
-                    className="relative flex h-11 items-center px-4 font-bold text-[#0A0A0A]"
+                    className="flex h-11 items-center px-4 font-bold text-[#0A0A0A] hover:opacity-80 transition-opacity"
                     href="#act"
-                    onClick={() => setActiveSection('act')}
+                    onClick={(e) => scrollToSection(e, 'act')}
                   >
                     Activity
                   </a>
@@ -631,7 +680,7 @@ export default function ResultPanel({
           {/* CONTENT PANELS */}
           <div className="min-w-0 space-y-24">
             {/* OVERVIEW SECTION */}
-            <section id="sum">
+            <section id="sum" className="scroll-mt-28">
               <h2 className="font-['Archivo_Black'] text-3xl text-[#0A0A0A] sm:text-5xl">Overview</h2>
               {/* Audience Pill Buttons */}
               <div className="mt-5 flex flex-wrap gap-2.5" role="group" aria-label="Audience">
@@ -667,7 +716,7 @@ export default function ResultPanel({
                 </button>
               </div>
 
-              {/* Rendered Markdown or Live Summary Box */}
+              {/* Rendered Markdown Box */}
               <div
                 className="nb mt-6 bg-white p-6 sm:p-8"
                 style={{ boxShadow: '8px 8px 0 #0A0A0A' }}
@@ -685,7 +734,7 @@ export default function ResultPanel({
             </section>
 
             {/* HIGHLIGHTS SECTION */}
-            <section id="hi">
+            <section id="hi" className="scroll-mt-28">
               <h2 className="font-['Archivo_Black'] text-3xl text-[#0A0A0A] sm:text-5xl">Highlights</h2>
               <div id="hcards" className="mt-6 grid gap-6 sm:grid-cols-3">
                 <div
@@ -713,7 +762,7 @@ export default function ResultPanel({
             </section>
 
             {/* ARCHITECTURE SECTION */}
-            <section id="arch">
+            <section id="arch" className="scroll-mt-28">
               <h2 className="font-['Archivo_Black'] text-3xl text-[#0A0A0A] sm:text-5xl">Architecture</h2>
               <p className="mt-3 font-medium text-[#0A0A0A]">Tap a module node to inspect its internal role.</p>
               <div
@@ -797,7 +846,7 @@ export default function ResultPanel({
             </section>
 
             {/* RELEASE NOTES SECTION */}
-            <section id="rel">
+            <section id="rel" className="scroll-mt-28">
               <h2 className="font-['Archivo_Black'] text-3xl text-[#0A0A0A] sm:text-5xl">Release notes</h2>
               {/* Category Filter Pills */}
               <div className="mt-5 flex flex-wrap gap-2.5" id="flts" role="group" aria-label="Filter release notes">
@@ -834,14 +883,14 @@ export default function ResultPanel({
                       {note.t}
                     </span>
                     <span className="min-w-0 flex-1 font-bold text-[#0A0A0A]">{note.x}</span>
-                    <code className="font-mono text-xs font-bold text-[#5B5B52]">{note.sha}</code>
+                    <code className="font-mono text-xs font-bold">{note.sha}</code>
                   </li>
                 ))}
               </ul>
             </section>
 
             {/* ACTIVITY SECTION */}
-            <section id="act">
+            <section id="act" className="scroll-mt-28">
               <h2 className="font-['Archivo_Black'] text-3xl text-[#0A0A0A] sm:text-5xl">Activity</h2>
               <div className="nb mt-6 bg-white p-6" style={{ boxShadow: '8px 8px 0 #0A0A0A' }}>
                 <p className="font-bold text-[#0A0A0A]">Commits per week, last 26 weeks</p>
