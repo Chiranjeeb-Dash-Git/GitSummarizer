@@ -2,14 +2,14 @@ import { query } from '../db/pool.js';
 import { env } from '../config/env.js';
 import * as repos from './repos.repo.js';
 
-export async function findFresh({ repositoryId, kind, audience, ref, immutable }) {
+export async function findFresh({ repositoryId, kind, audience, ref, immutable, promptVersion = env.PROMPT_VERSION }) {
   const { rows } = await query(
     `SELECT * FROM summaries
       WHERE repository_id = $1 AND kind = $2 AND audience = $3 AND ref = $4 AND prompt_version = $5
         AND ($6::boolean OR created_at > now() - make_interval(hours => $7::int))
       ORDER BY created_at DESC
       LIMIT 1`,
-    [repositoryId, kind, audience, ref, env.PROMPT_VERSION, immutable, env.SUMMARY_TTL_HOURS],
+    [repositoryId, kind, audience, ref, promptVersion, immutable, env.SUMMARY_TTL_HOURS],
   );
   return rows[0] ?? null;
 }

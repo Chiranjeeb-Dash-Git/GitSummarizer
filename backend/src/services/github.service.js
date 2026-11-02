@@ -5,11 +5,38 @@ import { TTLCache } from '../utils/ttlCache.js';
 const BASE = 'https://api.github.com';
 const cache = new TTLCache({ ttlMs: 5 * 60_000, max: 300 });
 
+async function readRawBounded(res, maxBytes) {
+  const size = Number(res.headers.get('content-length'));
+  if (size > maxBytes) {
+    await res.body?.cancel();
+    return null;
+  }
+  if (!res.body) return '';
+  const reader = res.body.getReader();
+  const chunks = [];
+  let total = 0;
+  try {
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel();
+        return null;
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  return Buffer.concat(chunks, total).toString('utf8');
+}
+
 async function gh(
   path,
-  { accept = 'application/vnd.github+json', raw = false, allow404 = false, allow409 = false, notFound = null } = {},
+  { accept = 'application/vnd.github+json', raw = false, maxBytes = null, allow404 = false, allow409 = false, notFound = null } = {},
 ) {
-  const key = `${accept}|${path}`;
+  const key = `${accept}|${maxBytes ?? 'unlimited'}|${path}`;
   const cached = cache.get(key);
   if (cached !== undefined) return cached;
 
@@ -28,7 +55,13 @@ async function gh(
   }
 
   if (res.ok) {
-    const value = raw ? await res.text() : await res.json();
+    let value;
+    try {
+      value = raw ? (maxBytes == null ? await res.text() : await readRawBounded(res, maxBytes)) : await res.json();
+    } catch {
+      throw new AppError(502, 'GITHUB_UNAVAILABLE', 'GitHub did not respond. Try again in a moment.');
+    }
+    if (value === null) return null;
     cache.set(key, value);
     return value;
   }
@@ -105,6 +138,47 @@ export const getReadme = (owner, repo, ref) =>
 export async function getRootEntries(owner, repo, ref) {
   const list = await gh(`/repos/${owner}/${repo}/contents${ref ? `?ref=${encodeURIComponent(ref)}` : ''}`, { allow404: true });
   return Array.isArray(list) ? list.map((e) => ({ name: e.name, type: e.type })) : [];
+}
+
+// GitHub may return a partial tree for very large repositories.
+export async function getRepositoryTree(owner, repo, ref) {
+  const data = await gh(`/repos/${owner}/${repo}/git/trees/${encodeURIComponent(ref)}?recursive=1`, {
+    allow404: true,
+    allow409: true,
+  });
+  if (!data || !Array.isArray(data.tree)) return { entries: [], truncated: true };
+  return {
+    entries: data.tree.map((entry) => ({ path: entry.path, type: entry.type, mode: entry.mode, size: entry.size })),
+    truncated: Boolean(data.truncated),
+  };
+}
+
+const SCAN_SKIP = /(^|\/)(node_modules|vendor|dist|build|coverage|\.git|__tests__|test|tests)\/|(^|\/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|\.env(?:\..*)?)$|\.min\.(?:js|css)$|\.map$/i;
+const MANIFEST = /(?:^|\/)(?:package\.json|pyproject\.toml|requirements\.txt|go\.mod|Cargo\.toml|pom\.xml|build\.gradle(?:\.kts)?|Gemfile|composer\.json|pubspec\.yaml)$/i;
+const ENTRYPOINT = /(?:^|\/)(?:index|main|app|server|routes|router)\.(?:js|jsx|ts|tsx|py|go|rs|java|php|rb|cs|kt|swift|dart|vue|svelte)$/i;
+const SOURCE = /\.(?:js|jsx|ts|tsx|py|go|rs|java|php|rb|cs|kt|swift|dart|vue|svelte|c|cc|cpp|h|hpp)$/i;
+const scanPriority = (path) => MANIFEST.test(path) ? 0 : ENTRYPOINT.test(path) ? 1 : 2;
+
+export async function getOverviewFiles(owner, repo, ref, entries) {
+  const candidates = entries
+    .filter((e) => e.type === 'blob' && e.mode !== '120000' && typeof e.path === 'string' && !SCAN_SKIP.test(e.path) &&
+      typeof e.size === 'number' && e.size >= 0 && e.size <= 60_000 && (MANIFEST.test(e.path) || SOURCE.test(e.path)))
+    .sort((a, b) => scanPriority(a.path) - scanPriority(b.path) ||
+      (MANIFEST.test(a.path) && MANIFEST.test(b.path) ? a.path.split('/').length - b.path.split('/').length : 0) ||
+      a.path.localeCompare(b.path));
+  const selected = candidates.filter((e) => MANIFEST.test(e.path)).slice(0, 3);
+  selected.push(...candidates.filter((e) => !MANIFEST.test(e.path)).slice(0, 6 - selected.length));
+  if (selected.length < 6) {
+    selected.push(...candidates.filter((e) => !selected.includes(e)).slice(0, 6 - selected.length));
+  }
+  const files = await Promise.all(selected.map(async ({ path }) => {
+    const encodedPath = path.split('/').map(encodeURIComponent).join('/');
+    const content = await gh(`/repos/${owner}/${repo}/contents/${encodedPath}?ref=${encodeURIComponent(ref)}`, {
+      accept: 'application/vnd.github.raw+json', raw: true, maxBytes: 60_000, allow404: true,
+    });
+    return content == null ? null : { path, content };
+  }));
+  return files.filter(Boolean);
 }
 
 export async function getLanguages(owner, repo) {

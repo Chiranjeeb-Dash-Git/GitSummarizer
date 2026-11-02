@@ -24,6 +24,7 @@ export default function Tabs({ tabs, value, onChange, label, className }) {
         return (
           <button
             key={t.value}
+            type="button"
             ref={(el) => (refs.current[i] = el)}
             role="tab"
             id={`${id}-${t.value}`}

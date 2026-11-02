@@ -14,13 +14,14 @@ export default function Read() {
   const input = params.get('input') ?? '';
   const kind = params.get('kind') ?? 'overview';
   const audience = params.get('audience') ?? 'learner';
+  const sha = kind === 'commit' ? params.get('sha') ?? '' : '';
   const { state, start, cancel } = useAnalyze();
 
   useEffect(() => {
     if (!input) return undefined;
-    start({ input, kind, audience, options: { limit: 30 } });
+    start({ input, kind, audience, options: { limit: 30, ...(sha && { sha }) } });
     return cancel;
-  }, [input, kind, audience, start, cancel]);
+  }, [input, kind, audience, sha, start, cancel]);
 
   useEffect(() => {
     if (state.status === 'done' && user) {
@@ -38,7 +39,7 @@ export default function Read() {
   if (state.status === 'error') {
     return (
       <div className="mx-auto max-w-[1280px] px-5 py-16 md:px-10 xl:px-16">
-        <ErrorPanel error={state.error} onRetry={() => start({ input, kind, audience, options: { limit: 30 } })} />
+        <ErrorPanel error={state.error} onRetry={() => start({ input, kind, audience, options: { limit: 30, ...(sha && { sha }) } })} />
       </div>
     );
   }
@@ -62,7 +63,7 @@ export default function Read() {
       summary={state.summary}
       cached={state.cached}
       saved={null}
-      onRefresh={() => start({ input, kind, audience, options: { limit: 30, refresh: true } })}
+      onRefresh={() => start({ input, kind, audience, options: { limit: 30, refresh: true, ...(sha && { sha }) } })}
     />
   );
 }

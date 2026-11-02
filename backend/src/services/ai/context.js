@@ -55,7 +55,9 @@ function renderPatches(files) {
   return [...blocks, ...notes].join('\n\n');
 }
 
-export function buildOverviewContext({ repo, readme, rootEntries, languages, commits }) {
+export function buildOverviewContext({ repo, readme, rootEntries, languages, commits, tree = { entries: [], truncated: false }, files = [] }) {
+  const entries = tree.entries.filter((e) => typeof e.path === 'string' && !NOISE.test(e.path));
+  const paths = entries.slice(0, 200).map((e) => `- ${e.path}${e.type === 'tree' ? '/' : ''}`).join('\n');
   return wrap(
     [
       '## Repository',
@@ -66,6 +68,14 @@ export function buildOverviewContext({ repo, readme, rootEntries, languages, com
       '',
       '## Top-level files and folders',
       rootEntries.slice(0, 80).map((e) => `${e.type === 'dir' ? '[dir] ' : '[file]'} ${e.name}`).join('\n') || 'none',
+      '',
+      '## Repository structure (sample)',
+      paths || 'No recursive file listing was available.',
+      tree.truncated || entries.length > 200 ? 'The file listing is incomplete.' : '',
+      '',
+      '## Selected source and configuration files (sample)',
+      files.length ? files.map((f) => `### ${f.path}\n${truncate(f.content, 3000)}`).join('\n\n') : 'No selected source files were available.',
+      'Only selected files are included; the complete source code was not inspected.',
       '',
       '## README',
       readme ? truncate(readme, LIMITS.readme) : 'This repository has no README.',

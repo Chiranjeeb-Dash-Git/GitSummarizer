@@ -9,7 +9,8 @@ import RepoPreview from './RepoPreview.jsx';
 import { useRepoPreview } from '../../hooks/useRepoPreview.js';
 import { AUDIENCES, KINDS } from '../../lib/constants.js';
 
-const COMMIT_LINK = /\/commit\/[0-9a-f]{7,40}/i;
+const COMMIT_LINK = /\/commit\/[0-9a-f]{7,40}(?:[/?#]|$)/i;
+const COMMIT_SHA = /^[0-9a-f]{7,40}$/i;
 
 export default function AnalyzerForm({ initial }) {
   const navigate = useNavigate();
@@ -17,12 +18,14 @@ export default function AnalyzerForm({ initial }) {
   const [input, setInput] = useState(initial?.input ?? '');
   const [kind, setKind] = useState(initial?.kind ?? 'overview');
   const [audience, setAudience] = useState(initial?.audience ?? 'learner');
+  const [sha, setSha] = useState(initial?.sha ?? '');
   const preview = useRepoPreview(input);
 
   const parsedType = preview.data?.parsed?.type;
   const forced = parsedType === 'commit' ? 'commit' : parsedType === 'compare' ? 'release_notes' : null;
   const activeKind = forced ?? kind;
-  const needsCommit = activeKind === 'commit' && !COMMIT_LINK.test(input);
+  const needsHash = activeKind === 'commit' && !COMMIT_LINK.test(input.trim());
+  const needsCommit = needsHash && !COMMIT_SHA.test(sha.trim());
 
   useEffect(() => {
     const onKey = (e) => {
@@ -41,6 +44,7 @@ export default function AnalyzerForm({ initial }) {
     if (input.trim().length < 3) return inputRef.current?.focus();
     if (needsCommit) return undefined;
     const q = new URLSearchParams({ input: input.trim(), kind: activeKind, audience });
+    if (needsHash) q.set('sha', sha.trim());
     return navigate(`/read?${q}`);
   };
 
@@ -74,7 +78,20 @@ export default function AnalyzerForm({ initial }) {
           onChange={(v) => !forced && setKind(v)}
         />
         {forced && <p className="mt-2 text-sm text-muted">The link decides this: {forced === 'commit' ? 'one commit' : 'release notes for the range'}.</p>}
-        {needsCommit && <p className="mt-2 text-sm font-medium text-oxide">Paste a commit link to explain one commit, or choose Overview.</p>}
+        {needsHash && (
+          <Field
+            className="mt-4"
+            label="Commit hash"
+            value={sha}
+            onChange={(e) => setSha(e.target.value)}
+            placeholder="e.g. a3f9c21"
+            autoComplete="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            hint="Enter 7–40 hexadecimal characters for this repository."
+            error={sha.trim() && needsCommit ? 'Enter a valid commit hash of 7–40 hexadecimal characters.' : undefined}
+          />
+        )}
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">

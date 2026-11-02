@@ -19,7 +19,7 @@ const AUDIENCE = {
 const TASK = {
   overview: `Write a project overview of the repository in the data.
 
-Use exactly this structure and omit a section only when the data has nothing for it:
+Use exactly this structure and omit a section only when the data has nothing for it. Explain important features and how the project is organised with specific paths when supported by the data. Mention briefly that the analysis is based on the supplied file sample, and mention any incomplete file listing.
 # <Project name>: <one plain sentence saying what it is>
 ## In one minute
 ## What it does
@@ -30,7 +30,7 @@ Use exactly this structure and omit a section only when the data has nothing for
 ## How the code is organised
 ## Where to look first
 
-Length: 450 to 750 words.`,
+Length: 650 to 900 words.`,
 
   release_notes: `Write release notes for the commits in the data.
 
