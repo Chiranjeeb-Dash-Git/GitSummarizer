@@ -59,3 +59,24 @@ test('email delivery uses a bounded timeout and reports timeout failure', async 
   await assert.rejects(sendVerificationOtp({ email: 'test@example.com', code: '123456' }),
     (err) => err.code === 'EMAIL_UNAVAILABLE');
 });
+
+test('sends verification using the configured sender with escaped display name', async (t) => {
+  const oldKey = env.RESEND_API_KEY;
+  const oldSender = env.EMAIL_FROM;
+  env.RESEND_API_KEY = 're_synthetic_test';
+  env.EMAIL_FROM = 'GitSummarizer <hello@example.com>';
+  t.after(() => { env.RESEND_API_KEY = oldKey; env.EMAIL_FROM = oldSender; });
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    const payload = JSON.parse(options.body);
+    assert.equal(payload.from, env.EMAIL_FROM);
+    assert.match(payload.html, /&lt;script&gt;/);
+    assert.doesNotMatch(payload.html, /<script>/);
+    assert.match(payload.text, /123456/);
+    assert.ok(options.signal);
+    return new Response(JSON.stringify({ id: 'synthetic-id' }), {
+      status: 200, headers: { 'content-type': 'application/json' },
+    });
+  });
+  const result = await sendVerificationOtp({ email: 'test@example.com', code: '123456', displayName: '<script>' });
+  assert.equal(result.id, 'synthetic-id');
+});
