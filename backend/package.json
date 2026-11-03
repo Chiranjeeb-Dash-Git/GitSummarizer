@@ -25,6 +25,7 @@
     "express-rate-limit": "^7.5.0",
     "gitsummarizer": "file:..",
     "helmet": "^8.0.0",
+    "jose": "^6.2.15",
     "jsonwebtoken": "^9.0.2",
     "openai": "^6.49.0",
     "pg": "^8.13.3",

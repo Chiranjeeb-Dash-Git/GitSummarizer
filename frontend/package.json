@@ -15,6 +15,7 @@
     "@fontsource-variable/bricolage-grotesque": "^5.2.5",
     "@fontsource-variable/instrument-sans": "^5.2.5",
     "@fontsource-variable/martian-mono": "^5.2.5",
+    "@neondatabase/auth": "^0.6.0-beta",
     "@tanstack/react-query": "^5.67.2",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",

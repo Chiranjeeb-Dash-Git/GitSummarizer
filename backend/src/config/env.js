@@ -27,6 +27,8 @@ const schema = z
     SUMMARY_TTL_HOURS: z.coerce.number().int().default(24),
     SERVE_CLIENT: z.enum(['true', 'false']).default('false'),
     LOG_LEVEL: z.string().default('info'),
+    NEON_AUTH_URL: z.string().optional(),
+    NEON_AUTH_JWKS_URL: z.string().optional(),
   })
   .superRefine((v, ctx) => {
     if (v.NODE_ENV === 'production' && v.RESEND_API_KEY && !v.EMAIL_FROM) {
