@@ -389,7 +389,7 @@ export default function ResultPanel({
           background-size: 22px 22px;
           color: #0A0A0A;
           font-family: 'Space Grotesk', system-ui, sans-serif;
-          overflow-x: hidden;
+          overflow-x: clip;
         }
         .nb {
           border: 3px solid #0A0A0A;
@@ -724,7 +724,7 @@ export default function ResultPanel({
 
         {/* MARQUEE */}
         <div
-          className="-mx-5 my-10 -rotate-1 overflow-hidden border-y-[3px] border-[#0A0A0A] bg-[#0A0A0A] py-3 text-[#FFD60A]"
+          className="sticky top-[60px] z-40 -mx-5 my-6 overflow-hidden border-y-[3px] border-[#0A0A0A] bg-[#0A0A0A] py-3 text-[#FFD60A] shadow-[0_4px_0_#0A0A0A]"
           aria-hidden="true"
         >
           <div className="marq font-['Archivo_Black'] text-xl">
@@ -741,7 +741,7 @@ export default function ResultPanel({
         <div className="grid gap-10 lg:grid-cols-[210px_1fr]">
           {/* RAIL */}
           <aside className="hidden lg:block">
-            <nav className="sticky top-28" aria-label="Sections">
+            <nav className="sticky top-20 z-30" aria-label="Sections">
               <ul className="relative space-y-1" id="rail">
                 {/* Active Indicator Backdrop */}
                 <span

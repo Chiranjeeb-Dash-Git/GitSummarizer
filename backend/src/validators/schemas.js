@@ -32,13 +32,14 @@ export const summaryRequestSchema = z.object({
   input: z.string().trim().min(3).max(300),
   kind: z.enum(['overview', 'release_notes', 'commit']).default('overview'),
   audience: z.enum(['learner', 'product', 'maintainer']).default('learner'),
-  options: z
-    .object({
+  options: z.preprocess(
+    (val) => val ?? {},
+    z.object({
       limit: z.number().int().min(5).max(100).default(30),
       sha: z.string().regex(/^[0-9a-f]{7,40}$/i).optional(),
       refresh: z.boolean().default(false),
     })
-    .default({}),
+  ),
 });
 
 export const previewQuerySchema = z.object({ input: z.string().trim().min(3).max(300) });
