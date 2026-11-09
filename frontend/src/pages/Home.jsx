@@ -76,7 +76,11 @@ export default function Home() {
               className="gv-reveal mx-auto mt-8 max-w-5xl font-['Archivo_Black'] text-[2.7rem] leading-[1.02] text-[#0A0A0A] sm:text-7xl lg:text-8xl"
               style={{ '--d': '.08s' }}
             >
-              Read any repo with <span className="hl">zero confusion.</span>
+              <span className="gv-headline-word" style={{ animationDelay: '0s' }}>Read</span>{' '}
+              <span className="gv-headline-word" style={{ animationDelay: '0.2s' }}>any</span>{' '}
+              <span className="gv-headline-word" style={{ animationDelay: '0.4s' }}>repo</span>{' '}
+              <span className="gv-headline-word" style={{ animationDelay: '0.6s' }}>with</span>{' '}
+              <span className="hl" style={{ animationDelay: '0.8s' }}>zero confusion.</span>
             </h1>
             <p
               className="gv-reveal mx-auto mt-7 max-w-2xl text-lg font-medium leading-relaxed text-[#0A0A0A] sm:text-xl"
