@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import MarkdownView from '../markdown/MarkdownView.jsx';
 import { useRepoDetails } from '../../hooks/useRepoDetails.js';
+import { useAuth } from '../../hooks/useAuth.js';
+import { api } from '../../lib/api.js';
 
 const COL = ['#FFD60A', '#FF5C3A', '#B5F23D', '#FF9EC4', '#12B76A'];
 
@@ -13,18 +15,29 @@ export default function ResultPanel({
   streaming,
   summary,
   cached,
+  saved,
   onRefresh,
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
   const [selectedAud, setSelectedAud] = useState(audience || 'learner');
   const [activeFilter, setActiveFilter] = useState('All');
   const [toastMsg, setToastMsg] = useState('');
   const [showToast, setShowToast] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(Boolean(saved));
+  const [savedId, setSavedId] = useState(saved?.id || null);
   const [activeSection, setActiveSection] = useState('sum');
   const [newRepoInput, setNewRepoInput] = useState('');
   const [inputError, setInputError] = useState('');
   const [selectedModuleIdx, setSelectedModuleIdx] = useState(0);
+
+  useEffect(() => {
+    if (saved) {
+      setIsSaved(true);
+      setSavedId(saved.id);
+    }
+  }, [saved]);
 
   const curRef = useRef(null);
   const progRef = useRef(null);
@@ -327,14 +340,37 @@ export default function ResultPanel({
     }
   };
 
-  const handleSaveToggle = (e) => {
+  const handleSaveToggle = async (e) => {
+    if (!user) {
+      triggerToast('Please sign in first to save');
+      setTimeout(() => {
+        navigate('/login', { state: { from: location.pathname + location.search } });
+      }, 1000);
+      return;
+    }
+
     const next = !isSaved;
     setIsSaved(next);
-    if (next) {
-      launchConfetti(e.clientX, e.clientY, 30);
-      triggerToast('Saved to Favorites!');
-    } else {
-      triggerToast('Removed from Favorites');
+
+    try {
+      if (next) {
+        launchConfetti(e.clientX, e.clientY, 30);
+        triggerToast('Saved to Favorites!');
+        if (summary?.id) {
+          const res = await api.post('/saved', { summaryId: summary.id, note: '', tags: [] });
+          if (res?.data?.id) setSavedId(res.data.id);
+        }
+      } else {
+        triggerToast('Removed from Favorites');
+        if (savedId) {
+          await api.del(`/saved/${savedId}`);
+          setSavedId(null);
+        }
+      }
+    } catch {
+      // In case of error, revert state
+      setIsSaved(!next);
+      triggerToast('Could not update saved status');
     }
   };
 
@@ -568,7 +604,7 @@ export default function ResultPanel({
       </div>
 
       {/* Sticky Header Nav */}
-      <header className="sticky top-0 z-50 px-3 pt-4">
+      <header className="sticky top-0 z-50 bg-[#FFF5DC]/90 backdrop-blur-md px-3 py-3 border-b-2 border-[#0A0A0A]/10">
         <nav
           className="nb mx-auto flex max-w-6xl items-center justify-between bg-white px-4 py-3"
           aria-label="Main"
@@ -584,6 +620,23 @@ export default function ResultPanel({
               <span className="hidden sm:inline-block font-mono text-xs font-bold text-[#5B5B52]">
                 ⚡ Syncing GitHub...
               </span>
+            )}
+            {user ? (
+              <a
+                href="/dashboard"
+                className="nb press lift rounded-lg bg-[#FFD60A] px-4 py-2 text-sm font-bold text-[#0A0A0A]"
+                style={{ boxShadow: '4px 4px 0 #0A0A0A' }}
+              >
+                Dashboard
+              </a>
+            ) : (
+              <a
+                href="/login"
+                className="nb press lift rounded-lg bg-white px-4 py-2 text-sm font-bold text-[#0A0A0A]"
+                style={{ boxShadow: '4px 4px 0 #0A0A0A' }}
+              >
+                Sign In
+              </a>
             )}
             <a
               href="/"
@@ -724,7 +777,7 @@ export default function ResultPanel({
 
         {/* MARQUEE */}
         <div
-          className="sticky top-[60px] z-40 -mx-5 my-6 overflow-hidden border-y-[3px] border-[#0A0A0A] bg-[#0A0A0A] py-3 text-[#FFD60A] shadow-[0_4px_0_#0A0A0A]"
+          className="-mx-5 my-8 -rotate-1 overflow-hidden border-y-[3px] border-[#0A0A0A] bg-[#0A0A0A] py-3 text-[#FFD60A]"
           aria-hidden="true"
         >
           <div className="marq font-['Archivo_Black'] text-xl">
@@ -741,7 +794,7 @@ export default function ResultPanel({
         <div className="grid gap-10 lg:grid-cols-[210px_1fr]">
           {/* RAIL */}
           <aside className="hidden lg:block">
-            <nav className="sticky top-20 z-30" aria-label="Sections">
+            <nav className="sticky top-28 z-30" aria-label="Sections">
               <ul className="relative space-y-1" id="rail">
                 {/* Active Indicator Backdrop */}
                 <span

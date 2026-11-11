@@ -10,13 +10,34 @@ export class ApiError extends Error {
   }
 }
 
-async function request(path, { method = 'GET', body, signal } = {}) {
+let tokenGetter = null;
+export function setAuthTokenGetter(fn) {
+  tokenGetter = fn;
+}
+
+async function request(path, { method = 'GET', body, signal, headers } = {}) {
   let res;
+  const reqHeaders = {
+    ...(body ? { 'Content-Type': 'application/json' } : {}),
+    ...headers,
+  };
+
+  if (!reqHeaders.Authorization && tokenGetter) {
+    try {
+      const token = await tokenGetter();
+      if (token) {
+        reqHeaders.Authorization = `Bearer ${token}`;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   try {
     res = await fetch(`${API_BASE}${path}`, {
       method,
       credentials: 'include',
-      headers: body ? { 'Content-Type': 'application/json' } : undefined,
+      headers: Object.keys(reqHeaders).length > 0 ? reqHeaders : undefined,
       body: body ? JSON.stringify(body) : undefined,
       signal,
     });

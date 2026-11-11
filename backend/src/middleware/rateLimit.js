@@ -8,7 +8,7 @@ const base = { standardHeaders: 'draft-7', legacyHeaders: false };
 export const globalLimiter = rateLimit({
   ...base,
   windowMs: 15 * 60_000,
-  limit: 300,
+  limit: 2000,
   handler: reply('RATE_LIMITED', 'Too many requests. Give it a moment.'),
 });
 
