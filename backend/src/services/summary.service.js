@@ -1,6 +1,6 @@
 import { env } from '../config/env.js';
 import { AppError } from '../utils/AppError.js';
-import { parseGitHubInput, InvalidGitHubUrlError } from '../utils/urlParser.js';
+import { parseGitHubInput } from '../utils/urlParser.js';
 import { toPublicRepo, toPublicSummary } from '../utils/mappers.js';
 import * as github from './github.service.js';
 import * as repos from '../repositories/repos.repo.js';
@@ -16,13 +16,7 @@ export async function runSummary({ input, kind, audience, options, userId, emit,
   const startedAt = Date.now();
 
   emit('stage', { key: 'parse', label: 'Reading the link' });
-  let parsed;
-  try {
-    parsed = parseGitHubInput(input);
-  } catch (err) {
-    if (err instanceof InvalidGitHubUrlError) throw new AppError(400, 'INVALID_URL', err.message);
-    throw err;
-  }
+  const parsed = parseGitHubInput(input);
 
   const effectiveKind =
     parsed.type === 'commit' ? 'commit' : parsed.type === 'compare' ? 'release_notes' : kind;

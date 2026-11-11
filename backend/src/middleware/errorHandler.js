@@ -1,10 +1,13 @@
 import { ZodError } from 'zod';
 import { AppError } from '../utils/AppError.js';
+import { InvalidGitHubUrlError } from '../utils/urlParser.js';
 import { logger } from '../config/logger.js';
 
 export function errorHandler(err, req, res, _next) {
   let e = err;
-  if (err instanceof ZodError) {
+  if (err instanceof InvalidGitHubUrlError) {
+    e = new AppError(400, 'INVALID_URL', err.message);
+  } else if (err instanceof ZodError) {
     e = new AppError(422, 'VALIDATION_ERROR', 'Some fields need attention.', err.flatten().fieldErrors);
   } else if (err?.type === 'entity.too.large') {
     e = new AppError(413, 'PAYLOAD_TOO_LARGE', 'That request is too large.');
