@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="t d" xmlns:c2pa="http://c2pa.org/manifest">
+  <title id="t">GitSummarizer architecture</title>
+  <desc id="d">Animated data flow: React client, Express API, Neon PostgreSQL, GitHub REST API and AI providers.</desc>
+  <defs>
+    <style>
+      .t{font:700 21px Georgia,'Times New Roman',serif;fill:#D4AF37}
+      .s{font:12.5px 'Courier New',Courier,monospace;fill:#9CA3AF}
+      .k{font:11px 'Courier New',Courier,monospace;fill:#6B7280;letter-spacing:3px}
+      .l{font:12.5px 'Courier New',Courier,monospace;fill:#A8A29E}
+      .le{font:12.5px 'Courier New',Courier,monospace;fill:#10B981}
+    </style>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#151515"/><stop offset="1" stop-color="#0A0A0A"/>
+    </linearGradient>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="55%">
+      <stop offset="0" stop-color="#D4AF37" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+    <path id="req" d="M300 235H470"/><path id="res" d="M470 265H300"/><path id="toDb" d="M730 215C800 215 820 90 900 90"/><path id="toGh" d="M730 250H900"/><path id="toAi" d="M730 285C800 285 820 410 900 410"/>
+  </defs>
+
+  <rect width="1200" height="500" rx="20" fill="#080808"/>
+  <rect width="1200" height="500" rx="20" fill="url(#bgGlow)"/>
+  <rect x=".5" y=".5" width="1199" height="499" rx="20" fill="none" stroke="#D4AF37" stroke-opacity=".18"/>
+
+  <use href="#req" fill="none" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.4" stroke-dasharray="3 7"><animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.2s" repeatCount="indefinite"/></use>
+  <use href="#res" fill="none" stroke="#10B981" stroke-opacity=".4" stroke-width="1.4" stroke-dasharray="3 7"><animate attributeName="stroke-dashoffset" from="0" to="20" dur="1.2s" repeatCount="indefinite"/></use>
+  <use href="#toDb" fill="none" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.4" stroke-dasharray="3 7"><animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.2s" repeatCount="indefinite"/></use>
+  <use href="#toGh" fill="none" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.4" stroke-dasharray="3 7"><animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.2s" repeatCount="indefinite"/></use>
+  <use href="#toAi" fill="none" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.4" stroke-dasharray="3 7"><animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.2s" repeatCount="indefinite"/></use>
+  
+  <g>
+    <rect x="40" y="190" width="260" height="120" rx="14" fill="url(#card)" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.2">
+      <animate attributeName="stroke-opacity" values=".25;.85;.25" dur="4.5s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="58" y="208" width="26" height="2" fill="#059669"/>
+    <text class="k" x="58" y="230">CLIENT</text>
+    <text class="t" x="58" y="258">React Application</text>
+    <text class="s" x="58" y="280">React 18 · Vite · Tailwind v4</text>
+    <text class="s" x="58" y="297">Zustand · React Query</text>
+  </g>
+  
+  <g>
+    <rect x="470" y="190" width="260" height="120" rx="14" fill="url(#card)" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.2">
+      <animate attributeName="stroke-opacity" values=".25;.85;.25" dur="4.5s" begin="0.7s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="488" y="208" width="26" height="2" fill="#059669"/>
+    <text class="k" x="488" y="230">API</text>
+    <text class="t" x="488" y="258">Express Server</text>
+    <text class="s" x="488" y="280">Node.js · Express</text>
+    <text class="s" x="488" y="297">Origin guard · Rate limit · Zod</text>
+  </g>
+  
+  <g>
+    <rect x="900" y="30" width="260" height="120" rx="14" fill="url(#card)" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.2">
+      <animate attributeName="stroke-opacity" values=".25;.85;.25" dur="4.5s" begin="1.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="918" y="48" width="26" height="2" fill="#059669"/>
+    <text class="k" x="918" y="70">DATABASE</text>
+    <text class="t" x="918" y="98">Neon PostgreSQL</text>
+    <text class="s" x="918" y="120">Serverless driver · pooled</text>
+    <text class="s" x="918" y="137">Summary cache · persistence</text>
+  </g>
+  
+  <g>
+    <rect x="900" y="190" width="260" height="120" rx="14" fill="url(#card)" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.2">
+      <animate attributeName="stroke-opacity" values=".25;.85;.25" dur="4.5s" begin="2.1s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="918" y="208" width="26" height="2" fill="#059669"/>
+    <text class="k" x="918" y="230">SOURCE</text>
+    <text class="t" x="918" y="258">GitHub REST API</text>
+    <text class="s" x="918" y="280">README · file tree</text>
+    <text class="s" x="918" y="297">Manifests · commit history</text>
+  </g>
+  
+  <g>
+    <rect x="900" y="350" width="260" height="120" rx="14" fill="url(#card)" stroke="#D4AF37" stroke-opacity=".4" stroke-width="1.2">
+      <animate attributeName="stroke-opacity" values=".25;.85;.25" dur="4.5s" begin="2.8s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="918" y="368" width="26" height="2" fill="#059669"/>
+    <text class="k" x="918" y="390">INFERENCE</text>
+    <text class="t" x="918" y="418">AI Providers</text>
+    <text class="s" x="918" y="440">Gemini · Claude · OpenAI</text>
+    <text class="s" x="918" y="457">Streaming completions</text>
+  </g>
+
+  <text class="l" x="385" y="224" text-anchor="middle">1 · submit repo URL</text>
+  <text class="le" x="385" y="292" text-anchor="middle">6 · SSE stream</text>
+  <text class="l" x="800" y="128" text-anchor="end">2 · cache lookup / save</text>
+  <text class="l" x="815" y="240" text-anchor="middle">3 · repo context</text>
+  <text class="l" x="800" y="378" text-anchor="end">4 · prompt  5 · tokens</text>
+  
+  <g>
+    <circle r="10" fill="#F5D76E" opacity=".18"/>
+    <circle r="3.8" fill="#F5D76E"/>
+    <animateMotion dur="2.2s" begin="0s" repeatCount="indefinite"><mpath href="#req"/></animateMotion>
+  </g>
+  
+  <g>
+    <circle r="10" fill="#10B981" opacity=".18"/>
+    <circle r="3.8" fill="#10B981"/>
+    <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#res"/></animateMotion>
+  </g>
+  <g>
+    <circle r="10" fill="#10B981" opacity=".18"/>
+    <circle r="3.8" fill="#10B981"/>
+    <animateMotion dur="1.5s" begin="0.75s" repeatCount="indefinite"><mpath href="#res"/></animateMotion>
+  </g>
+  
+  <g>
+    <circle r="10" fill="#F5D76E" opacity=".18"/>
+    <circle r="3.8" fill="#F5D76E"/>
+    <animateMotion dur="2.4s" begin="0.5s" repeatCount="indefinite"><mpath href="#toDb"/></animateMotion>
+  </g>
+  <g>
+    <circle r="10" fill="#10B981" opacity=".18"/>
+    <circle r="3.8" fill="#10B981"/>
+    <animateMotion dur="2.4s" begin="1.7s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#toDb"/></animateMotion>
+  </g>
+  
+  <g>
+    <circle r="10" fill="#F5D76E" opacity=".18"/>
+    <circle r="3.8" fill="#F5D76E"/>
+    <animateMotion dur="2.0s" begin="1.0s" repeatCount="indefinite"><mpath href="#toGh"/></animateMotion>
+  </g>
+  <g>
+    <circle r="10" fill="#10B981" opacity=".18"/>
+    <circle r="3.8" fill="#10B981"/>
+    <animateMotion dur="2.0s" begin="2.0s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#toGh"/></animateMotion>
+  </g>
+  
+  <g>
+    <circle r="10" fill="#F5D76E" opacity=".18"/>
+    <circle r="3.8" fill="#F5D76E"/>
+    <animateMotion dur="2.4s" begin="1.6s" repeatCount="indefinite"><mpath href="#toAi"/></animateMotion>
+  </g>
+  <g>
+    <circle r="10" fill="#10B981" opacity=".18"/>
+    <circle r="3.8" fill="#10B981"/>
+    <animateMotion dur="1.6s" begin="0s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#toAi"/></animateMotion>
+  </g>
+  <g>
+    <circle r="10" fill="#10B981" opacity=".18"/>
+    <circle r="3.8" fill="#10B981"/>
+    <animateMotion dur="1.6s" begin="0.8s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#toAi"/></animateMotion>
+  </g>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo1NmFlZmY4OS1iYWQ3LTRlM2EtODAwYi1mNDQwYjFjZGQ2MzgAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaGwEeVIQ7/kDm8MOlWVBTKoAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDoxMDUxZGY0Ny1lYWRhLTQ4MzUtYWFhMC02NjlkMjlhZGQ4ZGNscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoA5BEayQYnwRRknK5tyLE9AAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggm83GA7h00KdApedsF9yT+fpQX6oNkvW4nheA7UjvdI+kZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaIoIAOFQ0hP7SZX5dq21IggAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIG45cERh45NHYPrnUj6MOQ1QH13wkLyuDZ0ljPvWfvLhZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GSBUZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjU2YWVmZjg5LWJhZDctNGUzYS04MDBiLWY0NDBiMWNkZDYzOC9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmUxZmM1MGJhLTBkMjQtNDk5Ni1hZjljLTgzNDA4NDllMjJmNHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCbzcYDuHTQp0Cl52wX3JP5+lBfqg2S9bieF4DtSO90j6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggpyih6zTby6WuSrcsLZJyeOLV7kBEb4kSlbsmWzcFAoOiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggS8nxpySMVnpvQLH2PGfWbkzgGGDq0241gRcRN8GwC0x0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQKL0g6VSgIsPLBSYH7Rtqgwam8ua7Hv+U5JMKjFOwoqkaq/8c5+syUNh/+oM91Hntiq2MbObuHIRKT0l4Jf/tJI=</c2pa:manifest></metadata></svg>

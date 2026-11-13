@@ -1,138 +1,98 @@
-<svg
-  width="100%"
-  height="280"
-  viewBox="0 0 1200 280"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  style="background-color: #080808; border-radius: 12px; overflow: hidden;"
->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="t d" xmlns:c2pa="http://c2pa.org/manifest">
+  <title id="t">GitSummarizer</title>
+  <desc id="d">Animated banner for GitSummarizer, repository intelligence.</desc>
   <defs>
-    <!-- Luxury Obsidian to Gold to Emerald Gradient -->
-    <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#080808" stop-opacity="0.95" />
-      <stop offset="45%" stop-color="#141E15" stop-opacity="0.8" />
-      <stop offset="75%" stop-color="#059669" stop-opacity="0.45" />
-      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.6" />
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0C0C0C"/>
+      <stop offset="1" stop-color="#050505"/>
     </linearGradient>
-
-    <linearGradient id="waveGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#047857" stop-opacity="0.5" />
-      <stop offset="50%" stop-color="#059669" stop-opacity="0.25" />
-      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.4" />
+    <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#D4AF37" stop-opacity=".26"/>
+      <stop offset="1" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="emeraldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#059669" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#059669" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shimmer" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0" spreadMethod="repeat">
+      <stop offset="0" stop-color="#8A6D1D"/>
+      <stop offset=".3" stop-color="#D4AF37"/>
+      <stop offset=".5" stop-color="#FFF1B8"/>
+      <stop offset=".7" stop-color="#D4AF37"/>
+      <stop offset="1" stop-color="#8A6D1D"/>
+      <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="600 0" dur="6s" repeatCount="indefinite"/>
     </linearGradient>
-
-    <!-- Metallic Gold Text Gradient -->
-    <linearGradient id="goldText" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#F5E6AB" />
-      <stop offset="35%" stop-color="#D4AF37" />
-      <stop offset="70%" stop-color="#AA820A" />
-      <stop offset="100%" stop-color="#F3E5AB" />
-    </linearGradient>
-
-    <!-- Emerald Glow Filter -->
-    <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="8" result="blur" />
-      <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#D4AF37" stroke-opacity=".07" stroke-width="1"/>
+      <animateTransform attributeName="patternTransform" type="translate" from="0 0" to="40 40" dur="10s" repeatCount="indefinite"/>
+    </pattern>
+    <radialGradient id="fadeG" cx="50%" cy="50%" r="60%">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#000"/>
+    </radialGradient>
+    <mask id="fade"><rect width="1200" height="320" fill="url(#fadeG)"/></mask>
   </defs>
 
-  <style>
-    .title-text {
-      font-size: 64px;
-      font-weight: 800;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      letter-spacing: -1.5px;
-      animation: pulseGold 6s ease-in-out infinite alternate;
-    }
-    .tagline-text {
-      font-size: 19px;
-      font-weight: 500;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      fill: #10B981;
-    }
-    .badge-pill {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      font-family: monospace;
-      fill: #D4AF37;
-    }
-    @keyframes pulseGold {
-      0% { filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.25)); }
-      100% { filter: drop-shadow(0 0 24px rgba(5, 150, 105, 0.45)); }
-    }
-  </style>
+  <rect width="1200" height="320" fill="url(#bg)"/>
+  <rect width="1200" height="320" fill="url(#grid)" mask="url(#fade)"/>
 
-  <!-- Deep Obsidian Canvas Background -->
-  <rect width="100%" height="100%" fill="#080808" />
+  <ellipse cx="300" cy="150" rx="380" ry="190" fill="url(#goldGlow)">
+    <animate attributeName="cx" values="300;900;300" dur="16s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"/>
+  </ellipse>
+  <ellipse cx="950" cy="240" rx="320" ry="170" fill="url(#emeraldGlow)">
+    <animate attributeName="cx" values="950;250;950" dur="20s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"/>
+  </ellipse>
 
-  <!-- Animated Fluid Waves -->
-  <g opacity="0.85">
-    <path fill="url(#waveGrad1)">
-      <animate
-        attributeName="d"
-        dur="18s"
-        repeatCount="indefinite"
-        calcMode="spline"
-        keyTimes="0; 0.33; 0.66; 1"
-        keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
-        values="
-          M 0 0 L 0 210 C 300 250, 600 170, 1200 220 L 1200 0 Z;
-          M 0 0 L 0 230 C 400 180, 800 260, 1200 200 L 1200 0 Z;
-          M 0 0 L 0 190 C 350 240, 750 180, 1200 240 L 1200 0 Z;
-          M 0 0 L 0 210 C 300 250, 600 170, 1200 220 L 1200 0 Z
-        "
-      />
-    </path>
-    <path fill="url(#waveGrad2)" opacity="0.65">
-      <animate
-        attributeName="d"
-        dur="14s"
-        repeatCount="indefinite"
-        calcMode="spline"
-        keyTimes="0; 0.33; 0.66; 1"
-        keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
-        values="
-          M 0 0 L 0 230 C 450 180, 850 250, 1200 210 L 1200 0 Z;
-          M 0 0 L 0 200 C 300 240, 700 170, 1200 240 L 1200 0 Z;
-          M 0 0 L 0 240 C 500 200, 800 250, 1200 190 L 1200 0 Z;
-          M 0 0 L 0 230 C 450 180, 850 250, 1200 210 L 1200 0 Z
-        "
-      />
-    </path>
+  <g>
+    <circle cx="693" cy="330" r="2.1" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="9.8s" begin="-0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="9.8s" begin="-0.5s" repeatCount="indefinite"/></circle>
+    <circle cx="1127" cy="330" r="0.9" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="11.1s" begin="-10.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="11.1s" begin="-10.1s" repeatCount="indefinite"/></circle>
+    <circle cx="469" cy="330" r="0.9" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="10.0s" begin="-0.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="10.0s" begin="-0.7s" repeatCount="indefinite"/></circle>
+    <circle cx="215" cy="330" r="1.6" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="7.4s" begin="-4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="7.4s" begin="-4.2s" repeatCount="indefinite"/></circle>
+    <circle cx="487" cy="330" r="1.7" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="11.1s" begin="-0.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="11.1s" begin="-0.7s" repeatCount="indefinite"/></circle>
+    <circle cx="842" cy="330" r="0.9" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="8.5s" begin="-4.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="8.5s" begin="-4.7s" repeatCount="indefinite"/></circle>
+    <circle cx="302" cy="330" r="1.2" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="8.0s" begin="-0.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="8.0s" begin="-0.9s" repeatCount="indefinite"/></circle>
+    <circle cx="661" cy="330" r="1.6" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="11.8s" begin="-1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="11.8s" begin="-1.2s" repeatCount="indefinite"/></circle>
+    <circle cx="414" cy="330" r="1.3" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="10.8s" begin="-0.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="10.8s" begin="-0.7s" repeatCount="indefinite"/></circle>
+    <circle cx="152" cy="330" r="1.7" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="10.5s" begin="-5.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="10.5s" begin="-5.6s" repeatCount="indefinite"/></circle>
+    <circle cx="673" cy="330" r="1.5" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="13.5s" begin="-4.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="13.5s" begin="-4.9s" repeatCount="indefinite"/></circle>
+    <circle cx="538" cy="330" r="1.9" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="11.9s" begin="-2.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="11.9s" begin="-2.9s" repeatCount="indefinite"/></circle>
+    <circle cx="644" cy="330" r="1.5" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="13.1s" begin="-9.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="13.1s" begin="-9.6s" repeatCount="indefinite"/></circle>
+    <circle cx="619" cy="330" r="1.7" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="7.5s" begin="-3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="7.5s" begin="-3.8s" repeatCount="indefinite"/></circle>
+    <circle cx="367" cy="330" r="1.9" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="8.1s" begin="-4.0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="8.1s" begin="-4.0s" repeatCount="indefinite"/></circle>
+    <circle cx="110" cy="330" r="2.1" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="7.5s" begin="-4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="7.5s" begin="-4.2s" repeatCount="indefinite"/></circle>
+    <circle cx="672" cy="330" r="1.3" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="9.5s" begin="-4.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="9.5s" begin="-4.7s" repeatCount="indefinite"/></circle>
+    <circle cx="964" cy="330" r="0.9" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="330" to="-10" dur="7.7s" begin="-2.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="7.7s" begin="-2.1s" repeatCount="indefinite"/></circle>
   </g>
 
-  <!-- Glowing Accent Border Lines -->
-  <line x1="0" y1="279" x2="1200" y2="279" stroke="#059669" stroke-width="1.5" stroke-opacity="0.6" />
-
-  <!-- Central Brand Pill -->
-  <g transform="translate(600, 52)">
-    <rect x="-115" y="-14" width="230" height="28" rx="14" fill="#0d1f14" stroke="#059669" stroke-width="1" stroke-opacity="0.8" />
-    <circle cx="-95" cy="0" r="4" fill="#10B981" />
-    <text text-anchor="middle" y="4" class="badge-pill">REPOSITORY INTELLIGENCE</text>
+  <!-- frame -->
+  <rect x="20" y="20" width="1160" height="280" rx="18" fill="none" stroke="#D4AF37" stroke-opacity=".16"/>
+  <rect x="20" y="20" width="1160" height="280" rx="18" fill="none" stroke="#F5D76E" stroke-width="2" stroke-linecap="round" pathLength="1000" stroke-dasharray="70 930">
+    <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="9s" repeatCount="indefinite"/>
+  </rect>
+  <g fill="none" stroke="#D4AF37" stroke-opacity=".7" stroke-width="1.5">
+    <path d="M44 62V44H62"/><path d="M1156 62V44H1138"/>
+    <path d="M44 258V276H62"/><path d="M1156 258V276H1138"/>
   </g>
 
-  <!-- Main Headline Typography -->
-  <text
-    x="50%"
-    y="140"
-    text-anchor="middle"
-    dominant-baseline="middle"
-    fill="url(#goldText)"
-    class="title-text"
-  >GitSummarizer</text>
+  <!-- title -->
+  <g text-anchor="middle" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="1.4s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="translate" from="0 14" to="0 0" dur="1.4s" fill="freeze"/>
+    <text x="600" y="150" font-family="Georgia,'Times New Roman',serif" font-size="74" font-weight="700" letter-spacing="9" fill="url(#shimmer)">GITSUMMARIZER</text>
+    <text x="600" y="200" font-family="'Courier New',Courier,monospace" font-size="15" letter-spacing="11" fill="#A8A29E">REPOSITORY INTELLIGENCE</text>
+  </g>
 
-  <!-- Subtitle Tagline -->
-  <text
-    x="50%"
-    y="190"
-    text-anchor="middle"
-    dominant-baseline="middle"
-    class="tagline-text"
-  >Next-Gen Codebase Synthesis &amp; Automated Release Dossiers</text>
-</svg>
+  <!-- ornament line -->
+  <line x1="600" y1="228" x2="600" y2="228" stroke="#D4AF37" stroke-width="1.2" stroke-opacity=".8">
+    <animate attributeName="x1" from="600" to="380" dur="1.8s" begin=".4s" fill="freeze"/>
+    <animate attributeName="x2" from="600" to="820" dur="1.8s" begin=".4s" fill="freeze"/>
+  </line>
+  <rect x="-4.5" y="-4.5" width="9" height="9" fill="#080808" stroke="#D4AF37" stroke-width="1.4" transform="translate(600 228) rotate(45)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="1s" begin=".4s" fill="freeze"/>
+  </rect>
+
+  <text x="600" y="266" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-size="15" fill="#6B7280" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="1.4s" begin="1.2s" fill="freeze"/>
+    Public repositories, distilled into architecture overviews and release notes.
+  </text>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpmNThhNjM5NC1mNjM4LTQ5YmEtODY5NC1jMTJmMDZmMTE4Y2YAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaOPFTDBCii9ihz9Y8mk3FZ4AAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpmNGU0OTJkMC1kMmZkLTQ3NTItOWEzZS0wOWMyZjkxOWY1ZTJscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNo57X0bC37muX1x+VyFDHmFwAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg5+ZGIbkECdRAq2gAbv5h77G5YP44FFjska3pxSu5DSOkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaLjVllyW4ZJDZ3IeR3BkUkQAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIDDm9L99/AwUNl3pk6sPvIhykxjo1Gqv8wKWTlg5SvC5ZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GSXfZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmY1OGE2Mzk0LWY2MzgtNDliYS04Njk0LWMxMmYwNmYxMThjZi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjRlMTU1NDk3LWFkOTktNGYwNC1iNDQ3LWIyNGViMTMyOGY5OHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDn5kYhuQQJ1ECraABu/mHvsblg/jgUWOyRrenFK7kNI6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgg1ddyN1K0d0A1f7jv0iO9V2TykcF3uBvOLwX4Og94Fb6iY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggRTkfvn9+gjk9ZJTGEDm/7+j+B1B1OjygbTgJiA9bHHB0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQAQ4XgkCAHezgG2eyz+9FcgbcfzZF9QmwrNyvK7MXfqGgkuCyKd86VVKzaqF/0lEXNUJ5NMnJZiY9eO5vw+D9SI=</c2pa:manifest></metadata></svg>

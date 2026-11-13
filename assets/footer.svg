@@ -1,60 +1,53 @@
-<svg
-  width="100%"
-  height="140"
-  viewBox="0 0 1200 140"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  style="background-color: #080808; border-radius: 12px; overflow: hidden;"
->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="170" viewBox="0 0 1200 170" role="img" aria-labelledby="t" xmlns:c2pa="http://c2pa.org/manifest">
+  <title id="t">Designed and engineered by Chiranjeeb Dash</title>
   <defs>
-    <linearGradient id="footerWave" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#059669" stop-opacity="0.35" />
-      <stop offset="50%" stop-color="#141E15" stop-opacity="0.7" />
-      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.4" />
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#080808"/><stop offset="1" stop-color="#0D0D0D"/>
     </linearGradient>
-    <linearGradient id="goldCredit" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#F5E6AB" />
-      <stop offset="50%" stop-color="#D4AF37" />
-      <stop offset="100%" stop-color="#AA820A" />
+    <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#D4AF37" stop-opacity=".26"/>
+      <stop offset="1" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="emeraldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#059669" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#059669" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shimmer" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0" spreadMethod="repeat">
+      <stop offset="0" stop-color="#8A6D1D"/>
+      <stop offset=".3" stop-color="#D4AF37"/>
+      <stop offset=".5" stop-color="#FFF1B8"/>
+      <stop offset=".7" stop-color="#D4AF37"/>
+      <stop offset="1" stop-color="#8A6D1D"/>
+      <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="600 0" dur="6s" repeatCount="indefinite"/>
+    </linearGradient>
+    <linearGradient id="edge" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0">
+      <stop offset="0" stop-color="#D4AF37" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#D4AF37" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#D4AF37" stop-opacity="0"/>
     </linearGradient>
   </defs>
-
-  <style>
-    .footer-text {
-      font-size: 16px;
-      font-weight: 600;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      fill: url(#goldCredit);
-    }
-  </style>
-
-  <rect width="100%" height="100%" fill="#080808" />
-
-  <path fill="url(#footerWave)">
-    <animate
-      attributeName="d"
-      dur="16s"
-      repeatCount="indefinite"
-      calcMode="spline"
-      keyTimes="0; 0.5; 1"
-      keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-      values="
-        M 0 140 L 0 50 C 350 10, 750 90, 1200 40 L 1200 140 Z;
-        M 0 140 L 0 35 C 400 80, 800 20, 1200 60 L 1200 140 Z;
-        M 0 140 L 0 50 C 350 10, 750 90, 1200 40 L 1200 140 Z
-      "
-    />
-  </path>
-
-  <line x1="0" y1="0" x2="1200" y2="0" stroke="#059669" stroke-width="1.5" stroke-opacity="0.5" />
-
-  <text
-    x="50%"
-    y="78"
-    text-anchor="middle"
-    dominant-baseline="middle"
-    class="footer-text"
-  >Architected for Prestige &amp; Precision • Chiranjeeb Dash</text>
-</svg>
+  <rect width="1200" height="170" fill="url(#bg)"/>
+  <ellipse cx="600" cy="170" rx="520" ry="110" fill="url(#goldGlow)">
+    <animate attributeName="rx" values="420;560;420" dur="8s" repeatCount="indefinite"/>
+  </ellipse>
+  <ellipse cx="200" cy="170" rx="260" ry="80" fill="url(#emeraldGlow)">
+    <animate attributeName="cx" values="200;1000;200" dur="18s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"/>
+  </ellipse>
+  <g>
+    <circle cx="367" cy="180" r="1.4" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="9.9s" begin="-2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="9.9s" begin="-2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="472" cy="180" r="2.2" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="10.3s" begin="-9.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="10.3s" begin="-9.9s" repeatCount="indefinite"/></circle>
+    <circle cx="405" cy="180" r="1.5" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="8.7s" begin="-0.0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="8.7s" begin="-0.0s" repeatCount="indefinite"/></circle>
+    <circle cx="789" cy="180" r="2.1" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="10.0s" begin="-1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="10.0s" begin="-1.4s" repeatCount="indefinite"/></circle>
+    <circle cx="505" cy="180" r="2.1" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="11.9s" begin="-5.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="11.9s" begin="-5.2s" repeatCount="indefinite"/></circle>
+    <circle cx="863" cy="180" r="1.7" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="7.2s" begin="-2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="7.2s" begin="-2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="1048" cy="180" r="1.8" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="11.5s" begin="-10.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="11.5s" begin="-10.8s" repeatCount="indefinite"/></circle>
+    <circle cx="77" cy="180" r="1.0" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="12.7s" begin="-1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="12.7s" begin="-1.6s" repeatCount="indefinite"/></circle>
+    <circle cx="70" cy="180" r="1.4" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="10.9s" begin="-3.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="10.9s" begin="-3.7s" repeatCount="indefinite"/></circle>
+    <circle cx="1022" cy="180" r="1.0" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="11.7s" begin="-5.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="11.7s" begin="-5.5s" repeatCount="indefinite"/></circle>
+    <circle cx="511" cy="180" r="0.9" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="8.4s" begin="-5.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="8.4s" begin="-5.7s" repeatCount="indefinite"/></circle>
+    <circle cx="175" cy="180" r="1.0" fill="#D4AF37" opacity="0"><animate attributeName="cy" from="180" to="-10" dur="10.3s" begin="-8.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="10.3s" begin="-8.5s" repeatCount="indefinite"/></circle>
+  </g>
+  <rect x="0" y="0" width="1200" height="1.5" fill="url(#edge)"/>
+  <text x="600" y="84" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="26" font-weight="700" letter-spacing="3" fill="url(#shimmer)">Designed and engineered by Chiranjeeb Dash</text>
+  <text x="600" y="118" text-anchor="middle" font-family="'Courier New',Courier,monospace" font-size="13" letter-spacing="6" fill="#6B7280">GITSUMMARIZER · MIT LICENSE</text>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo3YjY1YzUwNC1lM2UxLTQ2YmYtOWM4Yi02NmU3NjIwYTllNmYAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaNdUnllVBd+lwoF0bqoxbFcAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo2MzVkYmEzYy0wYmQ1LTQ0YTEtYmQ3MS00MGMxNzQ2ZjI4MWRscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoJX10v1KoAfCeRui2dp+2DQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggVTXh66R+MyMullUW/+NHD6M1I/DnKVZprf26M+ouq1ikZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaE7oNwP8CDIp4khPX/+TKC0AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIGC7hifb3/XZnUoFAu1dM/VWVLUZzXcVNIJVxRn3CoguZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GRcpZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjdiNjVjNTA0LWUzZTEtNDZiZi05YzhiLTY2ZTc2MjBhOWU2Zi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjI5OGIxNGYyLTQ2ZWUtNDI3Mi04OGUyLTQyZTRjOTc3MjEwNnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCBVNeHrpH4zIy6WVRb/40cPozUj8OcpVmmt/boz6i6rWKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgg60zlIZomfh7HmpoLZ9gpxMrhS68K5t4sgRJUOc9s6d2iY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggwpLs0lXU+11u6a+urF//95LCIpTCVU4ZWFTE+G0BWWN0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQOYUwTnDd0iQDDTHO1sbNcSZA+QtZ/VyIjoDWnWqJPL9+NvlLwB6xYWqX/AmByoRcH/EmPWXxG4f8vpe6dMtuzw=</c2pa:manifest></metadata></svg>
