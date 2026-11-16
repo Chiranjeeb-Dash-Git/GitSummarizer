@@ -56,7 +56,7 @@ export function useAuth() {
       } catch (err) {
         // If Neon reports invalid credentials, throw clean message
         if (err?.code === 'invalid_credentials' || err?.message?.toLowerCase().includes('password')) {
-          throw new Error('Invalid email or password.');
+          throw new Error('Invalid email or password.', { cause: err });
         }
         // Fallback to local API
       }
@@ -120,7 +120,7 @@ export function useAuth() {
             },
           };
         }
-      } catch (err) {
+      } catch {
         // Fallback to backend verification
       }
 

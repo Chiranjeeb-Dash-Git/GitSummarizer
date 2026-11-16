@@ -4,7 +4,7 @@ import { Menu, Moon, Sun, X } from 'lucide-react';
 import StrataMark from '../ui/StrataMark.jsx';
 import Kbd from '../ui/Kbd.jsx';
 import Button from '../ui/Button.jsx';
-import { WipeLink, useWipeNavigate } from '../effects/StrataWipe.jsx';
+import { WipeLink } from '../effects/StrataWipe.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useUI } from '../../store/ui.js';
 import { applyTheme, currentTheme } from '../../lib/theme.js';
@@ -30,7 +30,6 @@ export function ThemeToggle() {
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const go = useWipeNavigate();
   const setPaletteOpen = useUI((s) => s.setPaletteOpen);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userDropdown, setUserDropdown] = useState(false);

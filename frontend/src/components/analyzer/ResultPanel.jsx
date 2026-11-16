@@ -47,7 +47,7 @@ export default function ResultPanel({
   const repoName = repoFullName.split('/')[1] || repoFullName;
 
   // Real-time live data pipeline integration
-  const { data: liveData, loading: liveLoading, refetch: refetchDetails, lastUpdated } = useRepoDetails(repoFullName);
+  const { data: liveData, loading: liveLoading, refetch: refetchDetails } = useRepoDetails(repoFullName);
 
   // Auto-refresh when switching between tabs
   useEffect(() => {
@@ -393,7 +393,7 @@ export default function ResultPanel({
     e.preventDefault();
     const val = newRepoInput.trim();
     const m = val.match(
-      /^(?:https?:\/\/)?(?:www\.)?(?:github\.com\/)?([\w.-]+)\/([\w.-]+?)(?:\.git)?(?:[\/?#].*)?$/i
+      /^(?:https?:\/\/)?(?:www\.)?(?:github\.com\/)?([\w.-]+)\/([\w.-]+?)(?:\.git)?(?:[/?#].*)?$/i
     );
     if (!m) {
       setInputError('Enter a GitHub link such as github.com/owner/repo.');

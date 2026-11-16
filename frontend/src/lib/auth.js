@@ -1,4 +1,4 @@
-import { createAuthClient, createInternalNeonAuth } from '@neondatabase/auth';
+import { createInternalNeonAuth } from '@neondatabase/auth';
 import { setAuthTokenGetter } from './api.js';
 
 export const NEON_AUTH_URL =

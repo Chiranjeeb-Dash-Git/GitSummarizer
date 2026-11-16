@@ -1,5 +1,3 @@
-import Chip from '../ui/Chip.jsx';
-
 export default function TagFilter({ tags = [], selectedTag, onSelectTag }) {
   if (!tags.length) return null;
 
