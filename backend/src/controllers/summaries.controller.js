@@ -1,5 +1,6 @@
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { AppError } from '../utils/AppError.js';
+import { InvalidGitHubUrlError } from '../utils/urlParser.js';
 import { logger } from '../config/logger.js';
 import { openSSE } from '../utils/sse.js';
 import { toPublicSummary } from '../utils/mappers.js';
@@ -22,9 +23,11 @@ export async function streamSummary(req, res) {
     });
   } catch (err) {
     if (!sse.signal.aborted) {
-      const known = err instanceof AppError;
+      const known = err instanceof AppError || err instanceof InvalidGitHubUrlError;
       if (!known) logger.error({ err, requestId: req.id }, 'summary stream failed');
-      const e = known ? err : new AppError(500, 'INTERNAL', 'Something went wrong on our side.');
+      const e = err instanceof InvalidGitHubUrlError
+        ? new AppError(400, 'INVALID_URL', err.message)
+        : known ? err : new AppError(500, 'INTERNAL', 'Something went wrong on our side.');
       sse.send('error', { code: e.code, message: e.message, details: e.details });
     }
   } finally {

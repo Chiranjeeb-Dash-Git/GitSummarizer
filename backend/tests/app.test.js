@@ -28,6 +28,24 @@ test('application starts and validates verification requests', async () => {
   }
 });
 
+test('summary streams preserve invalid URL errors after headers are sent', async () => {
+  const server = app.listen(0);
+  try {
+    const base = `http://127.0.0.1:${server.address().port}/api/v1`;
+    const response = await fetch(`${base}/summaries/stream`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ input: 'not a GitHub link', kind: 'overview', audience: 'learner' }),
+    });
+    const body = await response.text();
+    assert.equal(response.status, 200);
+    assert.match(body, /"code":"INVALID_URL"/);
+    assert.doesNotMatch(body, /"code":"INTERNAL"/);
+  } finally {
+    await new Promise((resolve, reject) => server.close((err) => err ? reject(err) : resolve()));
+  }
+});
+
 test('reports missing email configuration without exposing a code', async () => {
   await assert.rejects(sendVerificationOtp({ email: 'test@example.com', code: '123456' }),
     (err) => err.code === 'EMAIL_UNAVAILABLE' && !err.message.includes('123456'));
