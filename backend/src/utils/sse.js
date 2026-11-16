@@ -1,4 +1,4 @@
-export function openSSE(_req, res) {
+export function openSSE(req, res) {
   res.status(200).set({
     'Content-Type': 'text/event-stream; charset=utf-8',
     'Cache-Control': 'no-cache, no-transform',
@@ -9,20 +9,27 @@ export function openSSE(_req, res) {
 
   const controller = new AbortController();
 
+  const abort = () => controller.abort();
+  const cleanup = () => {
+    clearInterval(heartbeat);
+    req.off('aborted', abort);
+    res.off('close', abort);
+  };
+
   const send = (event, data) => {
-    if (!res.writableEnded && !res.destroyed) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+    if (!controller.signal.aborted && !res.writableEnded && !res.destroyed) {
+      res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+    }
   };
   const heartbeat = setInterval(() => {
-    if (!res.writableEnded && !res.destroyed) res.write(': ping\n\n');
+    if (!controller.signal.aborted && !res.writableEnded && !res.destroyed) res.write(': ping\n\n');
   }, 15_000);
 
-  res.on('close', () => {
-    clearInterval(heartbeat);
-    if (!res.writableEnded) controller.abort();
-  });
+  req.once('aborted', abort);
+  res.once('close', abort);
 
   const close = () => {
-    clearInterval(heartbeat);
+    cleanup();
     if (!res.writableEnded) res.end();
   };
 

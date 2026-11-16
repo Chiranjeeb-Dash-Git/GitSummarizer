@@ -7,7 +7,7 @@ const cache = new TTLCache({ ttlMs: 5 * 60_000, max: 300 });
 
 async function gh(
   path,
-  { accept = 'application/vnd.github+json', raw = false, allow404 = false, allow409 = false, notFound = null } = {},
+  { accept = 'application/vnd.github+json', raw = false, allow404 = false, allow409 = false, notFound = null, signal } = {},
 ) {
   const key = `${accept}|${path}`;
   const cached = cache.get(key);
@@ -22,7 +22,7 @@ async function gh(
 
   let res;
   try {
-    res = await fetch(`${BASE}${path}`, { headers, signal: AbortSignal.timeout(15_000) });
+    res = await fetch(`${BASE}${path}`, { headers, signal: AbortSignal.any([signal, AbortSignal.timeout(15_000)].filter(Boolean)) });
   } catch {
     throw new AppError(502, 'GITHUB_UNAVAILABLE', 'GitHub did not respond. Try again in a moment.');
   }
@@ -91,26 +91,27 @@ const mapFile = (f) => ({
   patch: f.patch ?? null,
 });
 
-export async function getRepository(owner, repo) {
-  const r = await gh(`/repos/${owner}/${repo}`);
+export async function getRepository(owner, repo, signal) {
+  const r = await gh(`/repos/${owner}/${repo}`, { signal });
   if (r.private) throw new AppError(403, 'REPO_PRIVATE', 'Private repositories are not supported.');
   return mapRepo(r);
 }
 
-export const getReadme = (owner, repo, ref) =>
+export const getReadme = (owner, repo, ref, signal) =>
   gh(`/repos/${owner}/${repo}/readme${ref ? `?ref=${encodeURIComponent(ref)}` : ''}`, {
     accept: 'application/vnd.github.raw+json',
     raw: true,
     allow404: true,
+    signal,
   });
 
-export async function getRootEntries(owner, repo, ref) {
-  const list = await gh(`/repos/${owner}/${repo}/contents${ref ? `?ref=${encodeURIComponent(ref)}` : ''}`, { allow404: true });
+export async function getRootEntries(owner, repo, ref, signal) {
+  const list = await gh(`/repos/${owner}/${repo}/contents${ref ? `?ref=${encodeURIComponent(ref)}` : ''}`, { allow404: true, signal });
   return Array.isArray(list) ? list.map((e) => ({ name: e.name, type: e.type })) : [];
 }
 
-export async function getLanguages(owner, repo) {
-  const data = (await gh(`/repos/${owner}/${repo}/languages`, { allow404: true })) ?? {};
+export async function getLanguages(owner, repo, signal) {
+  const data = (await gh(`/repos/${owner}/${repo}/languages`, { allow404: true, signal })) ?? {};
   const total = Object.values(data).reduce((a, b) => a + b, 0) || 1;
   return Object.entries(data)
     .sort((a, b) => b[1] - a[1])
@@ -118,27 +119,30 @@ export async function getLanguages(owner, repo) {
     .map(([name, bytes]) => ({ name, pct: Math.round((bytes / total) * 100) }));
 }
 
-export async function listCommits(owner, repo, { ref, limit = 30 } = {}) {
+export async function listCommits(owner, repo, { ref, limit = 30, signal } = {}) {
   const params = new URLSearchParams({ per_page: String(Math.min(limit, 100)) });
   if (ref) params.set('sha', ref);
   const list = await gh(`/repos/${owner}/${repo}/commits?${params}`, {
     allow409: true,
     notFound: { code: 'REF_NOT_FOUND', message: 'We could not find that branch in this repository.' },
+    signal,
   });
   return (list ?? []).map(mapCommit);
 }
 
-export async function getCommit(owner, repo, sha) {
+export async function getCommit(owner, repo, sha, signal) {
   const c = await gh(`/repos/${owner}/${repo}/commits/${encodeURIComponent(sha)}`, {
     notFound: { code: 'COMMIT_NOT_FOUND', message: 'We could not find that commit in this repository.' },
+    signal,
   });
   return { ...mapCommit(c), stats: c.stats ?? null, files: (c.files ?? []).map(mapFile) };
 }
 
-export async function compareRefs(owner, repo, base, head) {
+export async function compareRefs(owner, repo, base, head, signal) {
   const spec = `${encodeURIComponent(base)}...${encodeURIComponent(head)}`;
   const c = await gh(`/repos/${owner}/${repo}/compare/${spec}?per_page=100`, {
     notFound: { code: 'COMPARE_NOT_FOUND', message: 'We could not compare those two references. Check that both exist.' },
+    signal,
   });
   const commits = (c.commits ?? []).map(mapCommit);
   return {
