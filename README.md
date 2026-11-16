@@ -144,7 +144,7 @@ Browser                     API (/api/v1)               GitHub        AI        
 | **State & data** | Zustand, TanStack React Query, React Router |
 | **Markdown** | react-markdown, remark-gfm, rehype-highlight, rehype-slug |
 | **Backend** | Node.js 20, Express 4, ES modules (`"type": "module"`) |
-| **Validation** | Zod 3 (env, request bodies, queries) |
+| **Validation** | Zod 4 (env, request bodies, queries) |
 | **Database** | Neon serverless PostgreSQL, `pg` driver, SQL migrations (no ORM) |
 | **Auth** | jsonwebtoken, bcryptjs, cookie-parser |
 | **Security** | helmet, cors, express-rate-limit, origin guard |
@@ -277,7 +277,9 @@ COOKIE_DOMAIN=                      # .example.com for sibling subdomains
 GITHUB_TOKEN=
 
 # AI provider — choose one
-AI_PROVIDER=anthropic               # 'anthropic' | 'openai'
+AI_PROVIDER=gemini                  # 'gemini' | 'anthropic' | 'openai'
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-1.5-flash
 ANTHROPIC_API_KEY=
 ANTHROPIC_MODEL=claude-haiku-5-5
 OPENAI_API_KEY=
@@ -320,9 +322,9 @@ The project deploys to **[Vercel](https://vercel.com)** as a monorepo — **[liv
 | :--- | :--- |
 | `DATABASE_URL` | Neon pooled connection string |
 | `DATABASE_URL_UNPOOLED` | Neon direct connection string (for migrations) |
-| `AI_PROVIDER` | `anthropic` or `openai` |
-| `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` | The key matching `AI_PROVIDER` |
-| `ANTHROPIC_MODEL` / `OPENAI_MODEL` | Model name (check provider docs) |
+| `AI_PROVIDER` | `gemini`, `anthropic` or `openai` |
+| `GEMINI_API_KEY` / `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` | The key matching `AI_PROVIDER` |
+| `GEMINI_MODEL` / `ANTHROPIC_MODEL` / `OPENAI_MODEL` | Model name (check provider docs) |
 | `JWT_SECRET` | 32+ character random string |
 | `CLIENT_ORIGIN` | Exact public origin, e.g. `https://gitsummarizer-puce.vercel.app` |
 | `NODE_ENV` | `production` |
@@ -406,7 +408,6 @@ npm run lint       # in backend/ or frontend/
 
 Released under the **MIT License**. See [`LICENSE`](LICENSE).
 
-> ⚠️ **Note:** A `LICENSE` file does not currently exist in this repository. The badge and link above will be broken until one is added.
 
 <div align="center">
 
